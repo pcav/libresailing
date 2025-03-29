@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Ovni 32"
+AuthUserFile /home/paolo/Documents/personale/vela/sail/ovni32/.htpasswd
+Require user ovni32
