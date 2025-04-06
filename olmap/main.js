@@ -20,7 +20,7 @@ import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
 
-import geojsonObject from './data/sailing_trips.json';
+import geojsonObject from './assets/sailing_trips.json';
 
 const Cesium = window.Cesium;
 
@@ -100,16 +100,6 @@ class OverlayHandler {
     this.ol2d = ol2d;
     this.ol3d = ol3d;
     this.scene = scene;
-
-    this.staticBootstrapPopup = new olOverlay({
-      element: document.getElementById('popup-bootstrap')
-    });
-    
-    this.ol2d.addOverlay(this.staticBootstrapPopup);
-    
-    $('.popover-content a').click(function(event){
-        console.log("EVENT", event);
-    })
     
     const eventHandler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     eventHandler.setInputAction(this.onClickHandlerCS.bind(this), Cesium.ScreenSpaceEventType['LEFT_CLICK']);
@@ -117,30 +107,34 @@ class OverlayHandler {
   }
 
   onClickHandlerCS(event) {
+    console.log("onClickHandlerCS0",event)
     
     if (this.clickedFeat) {
         this.clickedFeat.setStyle(null);
     }
-      
+    console.log("onClickHandlerCS1")
     if (event.position.x === 0 && event.position.y === 0) {
-      this.onCloseClick()
+      this.resetFeature()
       return;
     }
-
+    console.log("onClickHandlerCS2")
     const pickedFeature = this.scene.pick(event.position);
     let olFeature;
     let olLayer
     if (pickedFeature && pickedFeature.primitive) {
         olFeature = pickedFeature.primitive.olFeature
         olLayer = pickedFeature.primitive.olLayer
+        console.log("onClickHandlerCS3")
     } else {
-        this.onCloseClick()
+        this.resetFeature()
+        console.log("onClickHandlerCS4")
         return
     }
     const ray = this.scene.camera.getPickRay(event.position);
     const cartesian = this.scene.globe.pick(ray, scene);
     if (!cartesian) {
-      this.onCloseClick()
+      this.resetFeature()
+      console.log("onClickHandlerCS5")
       return;
     }
     const cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
@@ -150,18 +144,17 @@ class OverlayHandler {
     if (height) {
       coords = coords.concat([height]);
     }
+    console.log("onClickHandlerCS4")
 
     // const transformedCoords = transform(coords, getProjection('EPSG:4326'), 'EPSG:3857');
-    const overlay = this.getOverlay();
-    overlay.setPosition(coords);
-    
-    this.setOverlayContent(overlay, olLayer, olFeature);
+    this.setupOverlay()
+    this.overlay.setPosition(coords);
+    console.log("onClickHandlerCS5")
+    console.log(coords)
+    this.setOverlayContent(this.overlay, olLayer, olFeature);
     this.clickedFeat = olFeature
     this.clickedFeat.setStyle(selectionStyle);
-  }
-
-  getOverlay() {
-    return this.staticBootstrapPopup;
+    console.log("onClickHandlerCS6",this.overlay)
   }
 
   setOverlayContent(overlay, layer, feature) {
@@ -171,7 +164,22 @@ class OverlayHandler {
       const fid = feature.get('BOAT');
       const title = layer.get('name')
       $(element).prop('title', title);
-      div.innerHTML = `BOAT:<code><a src="https://www.libresailing.eu/map/#2/7.4/0.3" target="_blank">${fid}</a></code>`;
+
+      div.innerHTML = '<div id="props">';
+      const props = feature.getProperties()
+      for (const key in props) {
+        if (key == 'geometry') continue;
+        let value 
+        if (key == 'FOTO') {
+          value = '<img class="ico" src="https://libresailing.eu/images/saleccia.jpg" />';
+        } else {
+          value = `<strong>${props[key]}<strong>`;
+        }
+        div.innerHTML += `<p>${key}: ${value}</p>`;
+      }
+      div.innerHTML += '</div>';
+
+      // div.innerHTML = `BOAT:<code><a src="https://www.libresailing.eu/map/#2/7.4/0.3" target="_blank">${fid}</a></code>`;
       $(element).popover('destroy');
       $(element).popover({
         'placement': 'right',
@@ -189,18 +197,24 @@ class OverlayHandler {
 
   }
 
-  onCloseClick() {
-    this.staticBootstrapPopup.setPosition(undefined);
+  resetFeature() {
+    console.log("resetFeature")
+    this.overlay.setPosition([1000,1000]);
     if (this.clickedFeat) {
         this.clickedFeat.setStyle(null);
     }
   }
 
-  addOverlay() {
+  onCloseClick() {
+    console.log("onCloseClick")
+    this.resetFeature()
+  }
+
+  setupOverlay() {
+    if (this.overlay) this.ol2d.removeOverlay(this.overlay);
     const element = document.getElementById('popup-bootstrap').cloneNode(true);
-    const overlay = new olOverlay({element});
-    this.ol2d.addOverlay(overlay);
-    return overlay;
+    this.overlay = new olOverlay({element});
+    this.ol2d.addOverlay(this.overlay);
   }
 }
 
@@ -226,7 +240,7 @@ const vectorSource = new VectorSource({
 // vectorSource.addFeature(new Feature(new Circle([5e6, 7e6], 1e6)));
 
 const vectorLayer = new VectorLayer({
-  name: "Sail trips",
+  name: "Sail trip",
   source: vectorSource
   // style: styleFunction,
 });
@@ -257,4 +271,5 @@ ol3d.setEnabled(true);
 const scene = ol3d.getCesiumScene();
 scene.globe.enableLighting = true;
 
-new OverlayHandler(map, ol3d, scene);
+const mapOH = new OverlayHandler(map, ol3d, scene);
+console.log(mapOH)
