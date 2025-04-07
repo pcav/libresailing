@@ -20,7 +20,7 @@ import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
 
-import geojsonObject from './src/sailing_trips.json';
+// import geojsonObject from './src/sailing_trips.json';
 
 const Cesium = window.Cesium;
 
