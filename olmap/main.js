@@ -20,7 +20,7 @@ import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
 
-import geojsonObject from './assets/sailing_trips.json';
+import geojsonObject from './src/sailing_trips.json';
 
 const Cesium = window.Cesium;
 
@@ -218,6 +218,16 @@ class OverlayHandler {
   }
 }
 
+const greenStyle = new olStyleStyle({
+  fill: new olStyleFill({
+    color: [255, 255, 255, 0.6]
+  }),
+  stroke: new olStyleStroke({
+    color: [0, 153, 23, 1],
+    width: 3
+  })
+});
+
 const selectionStyle = new olStyleStyle({
   fill: new olStyleFill({
     color: [255, 255, 255, 0.6]
@@ -233,7 +243,9 @@ const styleFunction = function (feature) {
 };
 
 const vectorSource = new VectorSource({
-  features: new GeoJSON().readFeatures(geojsonObject),
+  //features: new GeoJSON().readFeatures(geojsonObject),
+  url: '/sailing_trips.geojson',
+  format: new GeoJSON(),
   projection:'EPSG:4326'
 });
 
@@ -251,7 +263,6 @@ const map = new Map({
     new TileLayer({
       source: new OSM(),
     }),
-    vectorLayer,
   ],
   target: 'map',
   view: new View({
@@ -272,4 +283,29 @@ const scene = ol3d.getCesiumScene();
 scene.globe.enableLighting = true;
 
 const mapOH = new OverlayHandler(map, ol3d, scene);
-console.log(mapOH)
+console.log(mapOH);
+
+function loadGeojson(name, url, styleFunc) {
+    console.log(url);
+    $.getJSON(url, function(json) {
+        console.log(json); // this will show the info it in firebug console
+        const vectorSource = new VectorSource({
+          features: new GeoJSON().readFeatures(json),
+          // url: '/sailing_trips.geojson',
+          // format: new GeoJSON(),
+          projection:'EPSG:4326'
+        });
+
+        const vectorLayer = new VectorLayer({
+          name: name,
+          source: vectorSource,
+          style: styleFunc,
+        });
+        
+        map.addLayer(vectorLayer);
+    });
+}
+
+loadGeojson('Sail trips', 'sailing_trips.geojson')
+loadGeojson('Highlights', 'highlights.geojson')
+loadGeojson('Future', 'future.geojson',greenStyle)
