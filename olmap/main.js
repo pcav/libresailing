@@ -1,4 +1,5 @@
 import Feature from 'ol/Feature.js';
+import Point from 'ol/geom/Point.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
@@ -19,20 +20,20 @@ import {transform, get as getProjection} from 'ol/proj.js';
 import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
+import Papa from 'papaparse/papaparse.js';
 
 // import geojsonObject from './src/sailing_trips.json';
 
 const Cesium = window.Cesium;
 
-const image = new CircleStyle({
-  radius: 5,
-  fill: null,
-  stroke: new Stroke({color: 'red', width: 1}),
-});
-
 const styles = {
   'Point': new Style({
-    image: image,
+    image: new CircleStyle({
+        radius: 10,
+        fill: new olStyleFill({
+            color: 'rgba(255,0,0,1)'
+        }),
+    }),
   }),
   'LineString': new Style({
     stroke: new Stroke({
@@ -45,9 +46,6 @@ const styles = {
       color: 'green',
       width: 1,
     }),
-  }),
-  'MultiPoint': new Style({
-    image: image,
   }),
   'MultiPolygon': new Style({
     stroke: new Stroke({
@@ -87,10 +85,10 @@ const styles = {
   'Circle': new Style({
     stroke: new Stroke({
       color: 'red',
-      width: 2,
+      width: 10,
     }),
     fill: new Fill({
-      color: 'rgba(255,0,0,0.2)',
+      color: 'rgba(255,0,0,1)',
     }),
   }),
 };
@@ -103,38 +101,46 @@ class OverlayHandler {
     
     const eventHandler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     eventHandler.setInputAction(this.onClickHandlerCS.bind(this), Cesium.ScreenSpaceEventType['LEFT_CLICK']);
+    
+    this.ol2d.on('click', this.onClickHandlerOL.bind(this));
 
+  }
+  
+  onClickHandlerOL(event) {
+    const coordinates = event.coordinate;
+    console.log(event);
+    this.setupOverlay()
+    this.overlay.setPosition(coordinates);
+    const features = []
+    this.ol2d.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
+          features.push([layer, feature]);
+    });
+    this.setOverlayContent(this.overlay, features[0][0], features[0][1]);
   }
 
   onClickHandlerCS(event) {
-    console.log("onClickHandlerCS0",event)
     
     if (this.clickedFeat) {
         this.clickedFeat.setStyle(null);
     }
-    console.log("onClickHandlerCS1")
     if (event.position.x === 0 && event.position.y === 0) {
       this.resetFeature()
-      return;
+      return;image
     }
-    console.log("onClickHandlerCS2")
     const pickedFeature = this.scene.pick(event.position);
     let olFeature;
     let olLayer
     if (pickedFeature && pickedFeature.primitive) {
         olFeature = pickedFeature.primitive.olFeature
         olLayer = pickedFeature.primitive.olLayer
-        console.log("onClickHandlerCS3")
     } else {
         this.resetFeature()
-        console.log("onClickHandlerCS4")
         return
     }
     const ray = this.scene.camera.getPickRay(event.position);
     const cartesian = this.scene.globe.pick(ray, scene);
     if (!cartesian) {
       this.resetFeature()
-      console.log("onClickHandlerCS5")
       return;
     }
     const cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
@@ -144,17 +150,14 @@ class OverlayHandler {
     if (height) {
       coords = coords.concat([height]);
     }
-    console.log("onClickHandlerCS4")
 
     // const transformedCoords = transform(coords, getProjection('EPSG:4326'), 'EPSG:3857');
     this.setupOverlay()
     this.overlay.setPosition(coords);
-    console.log("onClickHandlerCS5")
     console.log(coords)
     this.setOverlayContent(this.overlay, olLayer, olFeature);
     this.clickedFeat = olFeature
     this.clickedFeat.setStyle(selectionStyle);
-    console.log("onClickHandlerCS6",this.overlay)
   }
 
   setOverlayContent(overlay, layer, feature) {
@@ -170,12 +173,14 @@ class OverlayHandler {
       for (const key in props) {
         if (key == 'geometry') continue;
         let value 
-        if (key == 'FOTO') {
-          value = '<img class="ico" src="https://libresailing.eu/images/saleccia.jpg" />';
-        } else {
-          value = `<strong>${props[key]}<strong>`;
+        if (props[key]) {
+            if (key == 'FOTO') {
+              value = `<img class="ico rounded" src="${props[key]}" />`;
+            } else {
+              value = `<strong>${props[key]}<strong>`;
+            }
+            div.innerHTML += `<p>${key}: ${value}</p>`;
         }
-        div.innerHTML += `<p>${key}: ${value}</p>`;
       }
       div.innerHTML += '</div>';
 
@@ -213,7 +218,7 @@ class OverlayHandler {
   setupOverlay() {
     if (this.overlay) this.ol2d.removeOverlay(this.overlay);
     const element = document.getElementById('popup-bootstrap').cloneNode(true);
-    this.overlay = new olOverlay({element});
+    this.overlay = new olOverlay({element:element, stopEvent: true});
     this.ol2d.addOverlay(this.overlay);
   }
 }
@@ -225,7 +230,13 @@ const greenStyle = new olStyleStyle({
   stroke: new olStyleStroke({
     color: [0, 153, 23, 1],
     width: 3
-  })
+  }),    
+  image: new CircleStyle({
+    radius: 10,
+    fill: new olStyleFill({
+        color: [0, 153, 23, 1]
+    }),
+}),
 });
 
 const selectionStyle = new olStyleStyle({
@@ -242,27 +253,23 @@ const styleFunction = function (feature) {
   return styles[feature.getGeometry().getType()];
 };
 
-const vectorSource = new VectorSource({
-  //features: new GeoJSON().readFeatures(geojsonObject),
-  url: '/sailing_trips.geojson',
-  format: new GeoJSON(),
-  projection:'EPSG:4326'
-});
-
 // vectorSource.addFeature(new Feature(new Circle([5e6, 7e6], 1e6)));
 
-const vectorLayer = new VectorLayer({
-  name: "Sail trip",
-  source: vectorSource
-  // style: styleFunction,
+const locLayer = new VectorLayer({
+  name: "location",
+  source: new VectorSource({
+      //features: [],
+      projection:'EPSG:4326'
+  }),
+  style: styles['Point'],
 });
 
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
   layers: [
     new TileLayer({
-      source: new OSM(),
-    }),
+      source: new OSM()
+    })
   ],
   target: 'map',
   view: new View({
@@ -307,5 +314,34 @@ function loadGeojson(name, url, styleFunc) {
 }
 
 loadGeojson('Sail trips', 'sailing_trips.geojson')
-loadGeojson('Highlights', 'highlights.geojson')
+loadGeojson('Highlights', 'highlights.geojson',greenStyle)
 loadGeojson('Future', 'future.geojson',greenStyle)
+// map.addLayer(locLayer);
+
+const locationsUrl = 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vSMBoW4MFTkzkoguEzKHtu1ou_ck97hfy_hQCJi3X94DGyPEwzGuQ-KQAiKc8JKz71ulm_l-_ONtpmo/pub?output=csv'
+Papa.parse(locationsUrl, {
+  download: true,
+  header: true,
+  complete: showInfo
+})
+
+function showInfo(results) {
+    map.addLayer(locLayer);
+    const data = results.data
+    console.log(data);
+    const lastLocList = data[data.length -1].Location.split(", ")
+    const lastLoc = [parseFloat(lastLocList[1]), parseFloat(lastLocList[0]), 100]
+    console.log(lastLoc);
+    // const transformedCoords = transform(lastLoc, getProjection('EPSG:4326'), 'EPSG:3857')
+    // console.log(transformedCoords);
+    // map.getView().setCenter(transformedCoords);
+    ol3d.getCamera().setCenter(lastLoc);
+    locLayer.getSource().clear();
+    locLayer.getSource().addFeature(new Feature({
+          geometry: new Point(lastLoc),
+          text: data[data.length -1]['Text'],
+          datetime: data[data.length -1]['Date Time']
+        })
+    );
+    console.log(locLayer.getSource().getFeatures());
+}
