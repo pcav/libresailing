@@ -229,12 +229,28 @@ const greenStyle = new olStyleStyle({
   }),
   stroke: new olStyleStroke({
     color: [0, 153, 23, 1],
-    width: 3
+    width: 4
   }),    
   image: new CircleStyle({
     radius: 10,
     fill: new olStyleFill({
         color: [0, 153, 23, 1]
+    }),
+}),
+});
+
+const redStyle = new olStyleStyle({
+  fill: new olStyleFill({
+    color: [255, 255, 255, 0.6]
+  }),
+  stroke: new olStyleStroke({
+    color: "#fc5603",
+    width: 2
+  }),    
+  image: new CircleStyle({
+    radius: 10,
+    fill: new olStyleFill({
+        color: "#fc5603"
     }),
 }),
 });
@@ -290,7 +306,10 @@ const scene = ol3d.getCesiumScene();
 scene.globe.enableLighting = true;
 
 const mapOH = new OverlayHandler(map, ol3d, scene);
-console.log(mapOH);
+
+$( ".frontover" ).on( "click", function() {
+  ol3d.setEnabled( !ol3d.getEnabled() );
+} );
 
 function loadGeojson(name, url, styleFunc) {
     console.log(url);
@@ -313,7 +332,7 @@ function loadGeojson(name, url, styleFunc) {
     });
 }
 
-loadGeojson('Sail trips', 'sailing_trips.geojson')
+loadGeojson('Sail trips', 'sailing_trips.geojson',redStyle)
 loadGeojson('Highlights', 'highlights.geojson',greenStyle)
 loadGeojson('Future', 'future.geojson',greenStyle)
 // map.addLayer(locLayer);
