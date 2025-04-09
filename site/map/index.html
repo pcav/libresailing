@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>libresailing map</title>
+    <title>GeoJSON</title>
     <link rel="stylesheet" href="node_modules/css/olcs.css" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <style>
@@ -54,6 +54,12 @@
         top: 2px;
         right: 8px;
       }
+      .frontover {
+        z-index: 100000 !important;
+        position: absolute;
+        right: 8px;
+        top:8px;
+      }
       .ico {
         max-width:200px;
         max-height:400px;
@@ -62,13 +68,15 @@
         width:250px;  
     }
     </style>
-    <script type="module" crossorigin src="/libresailing/site/map/assets/index-DvSbaOIP.js"></script>
+    <script type="module" crossorigin src="/libresailing/site/map/assets/index-DeGtDtK9.js"></script>
     <link rel="stylesheet" crossorigin href="/libresailing/site/map/assets/index-BtPuoxOl.css">
   </head>
   <body>
     <div id="popup-bootstrap" title="Welcome to OpenLayers"></div>
     <div id="map" class="map"></div>
-    <script type="text/javascript" src="https://enricofer.github.io/libresailing/site/map/js/Cesium.js"></script>
+    <button type="button" class="btn frontover btn-lg"><span class="glyphicon glyphicon-globe"></span></button>
+    <script type="text/javascript" src="./js/Cesium.js"></script>
+    <script type="text/javascript" src="/libresailing/site/map/js/Cesium.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
