@@ -11,6 +11,7 @@ import VectorSource from 'ol/source/Vector.js';
 import CircleStyle from 'ol/style/Circle.js';
 import Fill from 'ol/style/Fill.js';
 import Stroke from 'ol/style/Stroke.js';
+import Text from 'ol/style/Text.js';
 import Style from 'ol/style/Style.js';
 import FullScreen from 'ol/control/FullScreen.js';
 import {defaults as defaultControls} from 'ol/control/defaults.js';
@@ -98,7 +99,7 @@ class OverlayHandler {
     this.ol2d = ol2d;
     this.ol3d = ol3d;
     this.scene = scene;
-    
+    this.setupOverlay()
     const eventHandler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     eventHandler.setInputAction(this.onClickHandlerCS.bind(this), Cesium.ScreenSpaceEventType['LEFT_CLICK']);
     
@@ -107,15 +108,23 @@ class OverlayHandler {
   }
   
   onClickHandlerOL(event) {
+    if (this.clickedFeat) this.clickedFeat.setStyle(null);
     const coordinates = event.coordinate;
     console.log(event);
     this.setupOverlay()
     this.overlay.setPosition(coordinates);
-    const features = []
+    const features = [];
+    const me = this;
     this.ol2d.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
           features.push([layer, feature]);
     });
-    this.setOverlayContent(this.overlay, features[0][0], features[0][1]);
+    if (features.length > 0) {
+        console.log("CLICKEDFEATS", features);
+        this.setOverlayContent(this.overlay, features[0][0], features[0][1]);
+        this.clickedFeat = features[0][1]
+        this.clickedFeat.setStyle(selectionStyle)
+    }
+    
   }
 
   onClickHandlerCS(event) {
@@ -277,8 +286,32 @@ const locLayer = new VectorLayer({
       //features: [],
       projection:'EPSG:4326'
   }),
-  style: styles['Point'],
+  style: function (feature) {
+      console.log(feature.getProperties());
+      const datetime = feature.get('datetime');
+      const text = feature.get('text');
+      return new olStyleStyle({
+        image: new CircleStyle({
+            radius: 10,
+            fill: new olStyleFill({
+                color: "#fc5603"
+            })
+        }),
+        text: new Text({
+            font: '12px Arial,sans-serif',
+            textBaseline: 'middle',
+            text: `${text}`,
+            offsetX: 16,
+            textAlign: 'left',
+            rotation: -0.785398164, //45
+            fill: new Fill({
+              color: 'red',
+            }),
+        })
+      })
+  }
 });
+      
 
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
@@ -358,7 +391,7 @@ function showInfo(results) {
     locLayer.getSource().clear();
     locLayer.getSource().addFeature(new Feature({
           geometry: new Point(lastLoc),
-          text: data[data.length -1]['Text'],
+          text: data[data.length -1]['Text '],
           datetime: data[data.length -1]['Date Time']
         })
     );
