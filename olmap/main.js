@@ -22,8 +22,7 @@ import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
 import Papa from 'papaparse/papaparse.js';
-
-// import geojsonObject from './src/sailing_trips.json';
+import { Popover } from 'bootstrap'
 
 const Cesium = window.Cesium;
 
@@ -146,6 +145,9 @@ class OverlayHandler {
         this.resetFeature()
         return
     }
+    if (!olFeature) {
+        return
+    }
     const ray = this.scene.camera.getPickRay(event.position);
     const cartesian = this.scene.globe.pick(ray, scene);
     if (!cartesian) {
@@ -172,12 +174,14 @@ class OverlayHandler {
   setOverlayContent(overlay, layer, feature) {
       const element = overlay.getElement();
       const div = document.createElement('div');
+      div.classList.add('popup-content');
       div.onclick = this.onCloseClick.bind(this);
       const fid = feature.get('BOAT');
       const title = layer.get('name')
-      $(element).prop('title', title);
+      const fontSize = mobile ? '4vw' : '1vw';
+      //$(element).prop('title', title);
 
-      div.innerHTML = '<div id="props">';
+      div.innerHTML += `<h3 style="font-size:${fontSize}">${title}</h3>`;
       const props = feature.getProperties()
       for (const key in props) {
         if (key == 'geometry') continue;
@@ -186,14 +190,19 @@ class OverlayHandler {
             if (key == 'FOTO') {
               value = `<img class="ico rounded" src="${props[key]}" />`;
             } else {
-              value = `<strong>${props[key]}<strong>`;
+              value = `<strong style="font-size:${fontSize}">${props[key]}<strong>`;
             }
-            div.innerHTML += `<p>${key}: ${value}</p>`;
+            div.innerHTML += `<p style="font-size:${fontSize}">${key}: ${value}</p>`;
         }
       }
-      div.innerHTML += '</div>';
+
+      element.appendChild(div);
+      element.style.visibility = "visible";
+      
+
 
       // div.innerHTML = `BOAT:<code><a src="https://www.libresailing.eu/map/#2/7.4/0.3" target="_blank">${fid}</a></code>`;
+      /*
       $(element).popover('destroy');
       $(element).popover({
         'placement': 'right',
@@ -208,12 +217,14 @@ class OverlayHandler {
       $(element).find('.arrow').each(function(i){
         i.css('left', '15px')
       });
+      */
 
   }
 
   resetFeature() {
     console.log("resetFeature")
     this.overlay.setPosition([1000,1000]);
+    this.overlay.getElement().style.visibility = "hidden";
     if (this.clickedFeat) {
         this.clickedFeat.setStyle(null);
     }
@@ -226,9 +237,10 @@ class OverlayHandler {
 
   setupOverlay() {
     if (this.overlay) this.ol2d.removeOverlay(this.overlay);
-    const element = document.getElementById('popup-bootstrap').cloneNode(true);
+    const element = document.getElementById('popup').cloneNode(true);
     this.overlay = new olOverlay({element:element, stopEvent: true});
     this.ol2d.addOverlay(this.overlay);
+    this.overlay.getElement().style.visibility = "hidden";
   }
 }
 
@@ -263,6 +275,8 @@ const redStyle = new olStyleStyle({
     }),
 }),
 });
+
+const mobile = screen.width < 500;
 
 const selectionStyle = new olStyleStyle({
   fill: new olStyleFill({
@@ -346,7 +360,10 @@ $( ".frontover" ).on( "click", function() {
 
 function loadGeojson(name, url, styleFunc) {
     console.log(url);
-    $.getJSON(url, function(json) {
+    
+    fetch(url)
+    .then((response) => response.json())
+    .then((json) => {
         console.log(json); // this will show the info it in firebug console
         const vectorSource = new VectorSource({
           features: new GeoJSON().readFeatures(json),
