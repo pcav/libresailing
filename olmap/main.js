@@ -145,6 +145,9 @@ class OverlayHandler {
         this.resetFeature()
         return
     }
+    if (!olFeature) {
+        return
+    }
     const ray = this.scene.camera.getPickRay(event.position);
     const cartesian = this.scene.globe.pick(ray, scene);
     if (!cartesian) {
@@ -194,6 +197,7 @@ class OverlayHandler {
       }
 
       element.appendChild(div);
+      element.style.visibility = "visible";
       
 
 
@@ -220,6 +224,7 @@ class OverlayHandler {
   resetFeature() {
     console.log("resetFeature")
     this.overlay.setPosition([1000,1000]);
+    this.overlay.getElement().style.visibility = "hidden";
     if (this.clickedFeat) {
         this.clickedFeat.setStyle(null);
     }
@@ -235,6 +240,7 @@ class OverlayHandler {
     const element = document.getElementById('popup').cloneNode(true);
     this.overlay = new olOverlay({element:element, stopEvent: true});
     this.ol2d.addOverlay(this.overlay);
+    this.overlay.getElement().style.visibility = "hidden";
   }
 }
 
