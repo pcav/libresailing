@@ -1,6 +1,6 @@
 # Lista della spesa
 
-* [Guida alle quantità](docs/useful-stuff/20141111_LARN_Porzioni.pdf)
+* [Guida alle quantità](../pdf/20141111_LARN_Porzioni.pdf)
 
 ## Cibo
 Pasta
