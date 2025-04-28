@@ -22,7 +22,6 @@ import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
 import Papa from 'papaparse/papaparse.js';
-import { Popover } from 'bootstrap'
 
 const Cesium = window.Cesium;
 
