@@ -7,7 +7,7 @@
 { "type": "Feature", "properties": { "id": 2, "name": "Saloum", "arrival": "2024-10-27" }, "geometry": { "type": "Point", "coordinates": [ -1852811.934698392637074, 1563366.7228251285851 ] } },
 { "type": "Feature", "properties": { "id": 3, "name": "Noronha", "arrival": "2024-11-19" }, "geometry": { "type": "Point", "coordinates": [ -3607328.920333533082157, -427137.125156775175128 ] } },
 { "type": "Feature", "properties": { "id": 4, "name": "Guyane française", "arrival": "2024-12-15" }, "geometry": { "type": "Point", "coordinates": [ -5873690.079279174096882, 595310.629644436761737 ] } },
-{ "type": "Feature", "properties": { "id": 5, "name": "Easter Island", "arrival": "2025-05-15" }, "geometry": { "type": "Point", "coordinates": [ -12167892.704631811007857, -3130901.231224116869271 ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "Easter Island", "arrival": "2025-05-15" }, "geometry": { "type": "Point", "coordinates": [ -12182520.163807364180684, -3141591.309145888779312 ] } },
 { "type": "Feature", "properties": { "id": 6, "name": "Pitcairn", "arrival": "2025-06-01" }, "geometry": { "type": "Point", "coordinates": [ -14483196.117815181612968, -2870622.279268292244524 ] } },
 { "type": "Feature", "properties": { "id": 7, "name": "Marquises", "arrival": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -15593810.454197321087122, -1006107.034829172655009 ] } },
 { "type": "Feature", "properties": { "id": 8, "name": "Gambier", "arrival": "2025-06-15" }, "geometry": { "type": "Point", "coordinates": [ -15025767.141540434211493, -2650071.019521147944033 ] } },
