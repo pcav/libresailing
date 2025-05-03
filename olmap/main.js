@@ -17,11 +17,9 @@ import FullScreen from 'ol/control/FullScreen.js';
 import {defaults as defaultControls} from 'ol/control/defaults.js';
 import OLCesium from 'olcs';
 import olOverlay from 'ol/Overlay.js';
-import {transform, get as getProjection} from 'ol/proj.js';
 import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
-import Papa from 'papaparse/papaparse.js';
 
 const Cesium = window.Cesium;
 
@@ -243,39 +241,64 @@ class OverlayHandler {
   }
 }
 
+
+const mobile = screen.width < 500;
+
 const greenStyle = new olStyleStyle({
   fill: new olStyleFill({
     color: [255, 255, 255, 0.6]
   }),
   stroke: new olStyleStroke({
-    color: [0, 153, 23, 1],
-    width: 4
+    color: "#009917",
+    width: mobile ? 12 : 4
   }),    
   image: new CircleStyle({
-    radius: 10,
+    radius: mobile ? 15 : 10,
     fill: new olStyleFill({
         color: [0, 153, 23, 1]
     }),
 }),
 });
 
-const redStyle = new olStyleStyle({
-  fill: new olStyleFill({
-    color: [255, 255, 255, 0.6]
-  }),
-  stroke: new olStyleStroke({
-    color: "#fc5603",
-    width: 2
-  }),    
-  image: new CircleStyle({
-    radius: 10,
+const redStyle = function (feature) {
+  const style = new olStyleStyle({
     fill: new olStyleFill({
-        color: "#fc5603"
+      color: [255, 255, 255, 0.6]
     }),
-}),
-});
+    stroke: new olStyleStroke({
+      color: "#fc5603",
+      width: mobile ? 10 : 3,
+      lineDash: feature.get("SKIPPER") == 'y' ? undefined : [10, 10]
+    }),    
+    image: new CircleStyle({
+      radius: mobile ? 20 : 10,
+      fill: new olStyleFill({
+          color: "#fc5603"
+      }),
+    }),
+  });
+  return style
+}
 
-const mobile = screen.width < 500;
+
+const timezonesStyle = function (feature) {
+  const text = feature.get('name');
+  return new olStyleStyle({
+    stroke: new olStyleStroke({
+      color: "#0099ff",
+      width: mobile ? 4 : 1
+    }),
+    text: new Text({
+      font: '14px Arial,sans-serif',
+      textBaseline: 'middle',
+      text: `${text}`,
+      textAlign: 'center',
+      fill: new Fill({
+        color: [0, 153, 255, 1],
+      }),
+  })
+  });
+};
 
 const selectionStyle = new olStyleStyle({
   fill: new olStyleFill({
@@ -283,9 +306,33 @@ const selectionStyle = new olStyleStyle({
   }),
   stroke: new olStyleStroke({
     color: [0, 153, 255, 1],
-    width: 5
+    width: mobile ? 12 : 4
   })
 });
+
+const current_loc_style = function (feature) {
+  console.log(feature.getProperties());
+  const text = feature.get('time');
+  return new olStyleStyle({
+    image: new CircleStyle({
+        radius: 10,
+        fill: new olStyleFill({
+            color: "#fc5603"
+        })
+    }),
+    text: new Text({
+        font: '12px Arial,sans-serif',
+        textBaseline: 'middle',
+        text: `${text}`,
+        offsetX: 16,
+        textAlign: 'left',
+        rotation: -0.785398164, //45
+        fill: new Fill({
+          color: 'red',
+        }),
+    })
+  })
+}
 
 const styleFunction = function (feature) {
   return styles[feature.getGeometry().getType()];
@@ -293,45 +340,19 @@ const styleFunction = function (feature) {
 
 // vectorSource.addFeature(new Feature(new Circle([5e6, 7e6], 1e6)));
 
-const locLayer = new VectorLayer({
-  name: "location",
-  source: new VectorSource({
-      //features: [],
-      projection:'EPSG:4326'
-  }),
-  style: function (feature) {
-      console.log(feature.getProperties());
-      const datetime = feature.get('datetime');
-      const text = feature.get('text');
-      return new olStyleStyle({
-        image: new CircleStyle({
-            radius: 10,
-            fill: new olStyleFill({
-                color: "#fc5603"
-            })
-        }),
-        text: new Text({
-            font: '12px Arial,sans-serif',
-            textBaseline: 'middle',
-            text: `${text}`,
-            offsetX: 16,
-            textAlign: 'left',
-            rotation: -0.785398164, //45
-            fill: new Fill({
-              color: 'red',
-            }),
-        })
-      })
-  }
-});
-      
+const decode_layers = {};
+
+
+const osm = new TileLayer({
+    source: new OSM()
+  })
+
+decode_layers["osm"] = osm
 
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
   layers: [
-    new TileLayer({
-      source: new OSM()
-    })
+    osm,
   ],
   target: 'map',
   view: new View({
@@ -347,6 +368,7 @@ const ol3d = new OLCesium({
         return Cesium.JulianDate.now();
   }
 });
+
 ol3d.setEnabled(true);
 const scene = ol3d.getCesiumScene();
 scene.globe.enableLighting = true;
@@ -357,10 +379,19 @@ $( ".frontover" ).on( "click", function() {
   ol3d.setEnabled( !ol3d.getEnabled() );
 } );
 
-function loadGeojson(name, url, styleFunc) {
+if (mobile) {
+  $( "#menubtn" ).addClass('btn-lg');
+} else {
+  $( "#menubtn" ).addClass('btn-sm');
+  $( ".dropdown-menu" ).addClass('dropdownsmall');
+  $( ".dropdown-item" ).addClass('dropdownitemsmall');
+}
+
+function loadGeojson(name, url, styleFunc, visible, callback) {
     console.log(url);
-    
-    fetch(url)
+    fetch(url, {
+      mode: 'same-origin'
+    })
     .then((response) => response.json())
     .then((json) => {
         console.log(json); // this will show the info it in firebug console
@@ -373,43 +404,48 @@ function loadGeojson(name, url, styleFunc) {
 
         const vectorLayer = new VectorLayer({
           name: name,
+          visible: visible,
           source: vectorSource,
           style: styleFunc,
         });
         
         map.addLayer(vectorLayer);
+
+        if (callback) callback(vectorLayer);
     });
 }
 
-loadGeojson('Sail trips', 'sailing_trips.geojson',redStyle)
-loadGeojson('Highlights', 'highlights.geojson',greenStyle)
-loadGeojson('Future', 'future.geojson',greenStyle)
-// map.addLayer(locLayer);
-
-const locationsUrl = 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vSMBoW4MFTkzkoguEzKHtu1ou_ck97hfy_hQCJi3X94DGyPEwzGuQ-KQAiKc8JKz71ulm_l-_ONtpmo/pub?output=csv'
-Papa.parse(locationsUrl, {
-  download: true,
-  header: true,
-  complete: showInfo
-})
-
-function showInfo(results) {
-    map.addLayer(locLayer);
-    const data = results.data
-    console.log(data);
-    const lastLocList = data[data.length -1].Location.split(", ")
-    const lastLoc = [parseFloat(lastLocList[1]), parseFloat(lastLocList[0]), 100]
-    console.log(lastLoc);
-    // const transformedCoords = transform(lastLoc, getProjection('EPSG:4326'), 'EPSG:3857')
-    // console.log(transformedCoords);
-    // map.getView().setCenter(transformedCoords);
-    ol3d.getCamera().setCenter(lastLoc);
-    locLayer.getSource().clear();
-    locLayer.getSource().addFeature(new Feature({
-          geometry: new Point(lastLoc),
-          text: data[data.length -1]['Text '],
-          datetime: data[data.length -1]['Date Time']
-        })
-    );
-    console.log(locLayer.getSource().getFeatures());
+const centerMap = function (layer) {
+  const currentLoc = layer.getSource().getFeatures()[0].getGeometry().getCoordinates();
+  console.log ("CURRENT",currentLoc);
+  ol3d.getCamera().setCenter(currentLoc);
 }
+
+loadGeojson('current', 'track-api.geojson',current_loc_style, true, centerMap)
+loadGeojson('trips', 'sailing_trips.geojson',redStyle, true)
+loadGeojson('highlights', 'highlights.geojson',greenStyle, true)
+loadGeojson('future', 'future.geojson',greenStyle, true)
+loadGeojson('timezones', 'timezones.geojson',timezonesStyle, false)
+//loadGeojson('current', 'https://www.libresailing.eu/tracking/track-api.php?last=1&type=geojson',current_loc_style)
+
+$(".dropdown-item").on( "click", function() {
+  const formCheck  = $(this).children('div[class="form-check"]')
+  const checkboxElem = $(formCheck).children('input');
+  const checked = $(checkboxElem).is(":checked")
+  const layername = $(checkboxElem).attr( "name" );
+  const layer = map.getLayers().getArray().find(layer => layer.get('name') == layername);
+  if (checked) {
+    layer.setVisible(true)
+  } else {
+    layer.setVisible(false)
+  }
+  console.log( "Toggle", checkboxElem.attr( "name" ), layer, checked);
+} );
+
+
+//const lastLoc = [parseFloat(lastLocList[1]), parseFloat(lastLocList[0]), 100]
+//console.log(lastLoc);
+// const transformedCoords = transform(lastLoc, getProjection('EPSG:4326'), 'EPSG:3857')
+// console.log(transformedCoords);
+// map.getView().setCenter(transformedCoords);
+//ol3d.getCamera().setCenter(lastLoc);
