@@ -421,12 +421,12 @@ const centerMap = function (layer) {
   ol3d.getCamera().setCenter(currentLoc);
 }
 
-loadGeojson('current', 'track-api.geojson',current_loc_style, true, centerMap)
+loadGeojson('current', '/tracking/track-api.php?last=1&type=geojson',current_loc_style, true, centerMap)
+//loadGeojson('current', 'track-api.geojson',current_loc_style, true, centerMap)
 loadGeojson('trips', 'sailing_trips.geojson',redStyle, true)
 loadGeojson('highlights', 'highlights.geojson',greenStyle, true)
 loadGeojson('future', 'future.geojson',greenStyle, true)
 loadGeojson('timezones', 'timezones.geojson',timezonesStyle, false)
-//loadGeojson('current', 'https://www.libresailing.eu/tracking/track-api.php?last=1&type=geojson',current_loc_style)
 
 $(".dropdown-item").on( "click", function() {
   const formCheck  = $(this).children('div[class="form-check"]')
