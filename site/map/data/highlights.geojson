@@ -3,19 +3,19 @@
 "name": "highlights",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3857" } },
 "features": [
-{ "type": "Feature", "properties": { "id": 1, "name": "Guna Yala", "arrival": "2025-02-15" }, "geometry": { "type": "Point", "coordinates": [ -8723864.703784013167024, 1053113.649140872526914 ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "Guna Yala", "arrival": "2025-02-15" }, "geometry": { "type": "Point", "coordinates": [ -8723864.703784013167024, 1053113.649140872526914 ] } },
 { "type": "Feature", "properties": { "id": 2, "name": "Saloum", "arrival": "2024-10-27" }, "geometry": { "type": "Point", "coordinates": [ -1852811.934698392637074, 1563366.7228251285851 ] } },
 { "type": "Feature", "properties": { "id": 3, "name": "Noronha", "arrival": "2024-11-19" }, "geometry": { "type": "Point", "coordinates": [ -3607328.920333533082157, -427137.125156775175128 ] } },
 { "type": "Feature", "properties": { "id": 4, "name": "Guyane française", "arrival": "2024-12-15" }, "geometry": { "type": "Point", "coordinates": [ -5873690.079279174096882, 595310.629644436761737 ] } },
-{ "type": "Feature", "properties": { "id": 5, "name": "Easter Island", "arrival": "2025-05-15" }, "geometry": { "type": "Point", "coordinates": [ -12182520.163807364180684, -3141591.309145888779312 ] } },
-{ "type": "Feature", "properties": { "id": 6, "name": "Pitcairn", "arrival": "2025-06-01" }, "geometry": { "type": "Point", "coordinates": [ -14483196.117815181612968, -2870622.279268292244524 ] } },
-{ "type": "Feature", "properties": { "id": 7, "name": "Marquises", "arrival": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -15593810.454197321087122, -1006107.034829172655009 ] } },
+{ "type": "Feature", "properties": { "id": 6, "name": "Easter Island", "arrival": "2025-05-15" }, "geometry": { "type": "Point", "coordinates": [ -12182520.163807364180684, -3141591.309145888779312 ] } },
+{ "type": "Feature", "properties": { "id": 7, "name": "Pitcairn", "arrival": "2025-06-01" }, "geometry": { "type": "Point", "coordinates": [ -14483196.117815181612968, -2870622.279268292244524 ] } },
+{ "type": "Feature", "properties": { "id": 10, "name": "Marquises", "arrival": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -15593810.454197321087122, -1006107.034829172655009 ] } },
 { "type": "Feature", "properties": { "id": 8, "name": "Gambier", "arrival": "2025-06-15" }, "geometry": { "type": "Point", "coordinates": [ -15025767.141540434211493, -2650071.019521147944033 ] } },
 { "type": "Feature", "properties": { "id": 9, "name": "Tuamotu", "arrival": "2025-07-01" }, "geometry": { "type": "Point", "coordinates": [ -15752111.758306410163641, -2014108.772297790506855 ] } },
-{ "type": "Feature", "properties": { "id": 10, "name": "FSM", "arrival": "2025-12-01" }, "geometry": { "type": "Point", "coordinates": [ 16896365.081243705004454, 820206.600426476914436 ] } },
-{ "type": "Feature", "properties": { "id": 11, "name": "Nihon", "arrival": "2026-04-14" }, "geometry": { "type": "Point", "coordinates": [ 15369358.121545853093266, 3968897.129072289448231 ] } },
-{ "type": "Feature", "properties": { "id": 12, "name": "Madagascar", "arrival": "2026-12-01" }, "geometry": { "type": "Point", "coordinates": [ 5162523.275631762109697, -1642373.99212568346411 ] } },
-{ "type": "Feature", "properties": { "id": 13, "name": "Langebaan", "arrival": "2026-04-01" }, "geometry": { "type": "Point", "coordinates": [ 1994747.799672610824928, -3907900.452947084791958 ] } },
-{ "type": "Feature", "properties": { "id": 13, "name": "Arguin", "arrival": "2024-10-12" }, "geometry": { "type": "Point", "coordinates": [ -1840188.770008686697111, 2238157.200476978439838 ] } }
+{ "type": "Feature", "properties": { "id": 11, "name": "FSM", "arrival": "2025-12-01" }, "geometry": { "type": "Point", "coordinates": [ 16896365.081243705004454, 820206.600426476914436 ] } },
+{ "type": "Feature", "properties": { "id": 12, "name": "Nihon", "arrival": "2026-04-14" }, "geometry": { "type": "Point", "coordinates": [ 15369358.121545853093266, 3968897.129072289448231 ] } },
+{ "type": "Feature", "properties": { "id": 13, "name": "Madagascar", "arrival": "2026-12-01" }, "geometry": { "type": "Point", "coordinates": [ 5162523.275631762109697, -1642373.99212568346411 ] } },
+{ "type": "Feature", "properties": { "id": 14, "name": "Langebaan", "arrival": "2026-04-01" }, "geometry": { "type": "Point", "coordinates": [ 1994747.799672610824928, -3907900.452947084791958 ] } },
+{ "type": "Feature", "properties": { "id": 1, "name": "Arguin", "arrival": "2024-10-12" }, "geometry": { "type": "Point", "coordinates": [ -1840188.770008686697111, 2238157.200476978439838 ] } }
 ]
 }
