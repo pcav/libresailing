@@ -280,6 +280,26 @@ const redStyle = function (feature) {
   return style
 }
 
+const darkRedStyle = function (feature) {
+  const style = new olStyleStyle({
+    fill: new olStyleFill({
+      color: "#a02e30"
+    }),
+    stroke: new olStyleStroke({
+      color: "#a02e30",
+      width: mobile ? 10 : 3,
+      //lineDash: feature.get("SKIPPER") == 'y' ? undefined : [10, 10]
+    }),    
+    image: new CircleStyle({
+      radius: mobile ? 20 : 10,
+      fill: new olStyleFill({
+          color: "#a02e30"
+      }),
+    }),
+  });
+  return style
+}
+
 
 const timezonesStyle = function (feature) {
   const text = feature.get('name');
@@ -326,7 +346,7 @@ const current_loc_style = function (feature) {
         text: `${text}`,
         offsetX: 16,
         textAlign: 'left',
-        rotation: -0.785398164, //45
+        //rotation: -0.785398164, //45
         fill: new Fill({
           color: 'red',
         }),
@@ -341,7 +361,6 @@ const styleFunction = function (feature) {
 // vectorSource.addFeature(new Feature(new Circle([5e6, 7e6], 1e6)));
 
 const decode_layers = {};
-
 
 const osm = new TileLayer({
     source: new OSM()
@@ -377,6 +396,10 @@ const mapOH = new OverlayHandler(map, ol3d, scene);
 
 $( ".frontover" ).on( "click", function() {
   ol3d.setEnabled( !ol3d.getEnabled() );
+  const checkosm = map.getLayers().getArray().find(layer => layer.get('name') == layername);
+  console.log(checkosm);
+  map.removeLayer(checkosm);
+  map.addLayer(osm);
 } );
 
 if (mobile) {
@@ -422,10 +445,11 @@ const centerMap = function (layer) {
 }
 
 loadGeojson('current', '/tracking/track-api.php?last=1&type=geojson',current_loc_style, true, centerMap)
-//loadGeojson('current', 'track-api.geojson',current_loc_style, true, centerMap)
-loadGeojson('trips', 'sailing_trips.geojson',redStyle, true)
-loadGeojson('highlights', 'highlights.geojson',greenStyle, true)
-loadGeojson('future', 'future.geojson',greenStyle, true)
+//loadGeojson('current', 'data/track-api.geojson',current_loc_style, true, centerMap)
+loadGeojson('trips', 'data/rotte.geojson',redStyle, true)
+loadGeojson('highlights', 'data/highlights.geojson',greenStyle, true)
+loadGeojson('future', 'data/future.geojson',greenStyle, true)
+loadGeojson('tracks', 'data/tracks.geojson',darkRedStyle, true)
 loadGeojson('timezones', 'timezones.geojson',timezonesStyle, false)
 
 $(".dropdown-item").on( "click", function() {
