@@ -1,1 +1,0 @@
-copy dist content to libresailing/site/map
