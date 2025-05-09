@@ -341,7 +341,7 @@ const current_loc_style = function (feature) {
         })
     }),
     text: new Text({
-        font: '12px Arial,sans-serif',
+        font: '15px Arial,sans-serif',
         textBaseline: 'middle',
         text: `${text}`,
         offsetX: 16,
@@ -439,13 +439,18 @@ function loadGeojson(name, url, styleFunc, visible, callback) {
 }
 
 const centerMap = function (layer) {
-  const currentLoc = layer.getSource().getFeatures()[0].getGeometry().getCoordinates();
-  console.log ("CURRENT",currentLoc);
-  ol3d.getCamera().setCenter(currentLoc);
+  const currentFeats = layer.getSource().getFeatures()
+  if ( currentFeats ) {
+    const currentLoc = currentFeats[0].getGeometry().getCoordinates();
+    console.log ("CURRENT",currentLoc);
+    ol3d.getCamera().setCenter(currentLoc);
+  } else if (layer.get('name') == 'current') {
+    loadGeojson('current_dev', 'data/track-api.geojson',current_loc_style, true, centerMap)
+  }
 }
 
 loadGeojson('current', '/tracking/track-api.php?last=1&type=geojson',current_loc_style, true, centerMap)
-//loadGeojson('current', 'data/track-api.geojson',current_loc_style, true, centerMap)
+loadGeojson('current_dev', 'data/track-api.geojson',current_loc_style, true, centerMap)
 loadGeojson('trips', 'data/rotte.geojson',redStyle, true)
 loadGeojson('highlights', 'data/highlights.geojson',greenStyle, true)
 loadGeojson('future', 'data/future.geojson',greenStyle, true)
