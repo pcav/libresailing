@@ -450,7 +450,6 @@ const centerMap = function (layer) {
 }
 
 loadGeojson('current', '/tracking/track-api.php?last=1&type=geojson',current_loc_style, true, centerMap)
-loadGeojson('current_dev', 'data/track-api.geojson',current_loc_style, true, centerMap)
 loadGeojson('trips', 'data/rotte.geojson',redStyle, true)
 loadGeojson('highlights', 'data/highlights.geojson',greenStyle, true)
 loadGeojson('future', 'data/future.geojson',greenStyle, true)
