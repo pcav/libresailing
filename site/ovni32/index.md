@@ -2,14 +2,9 @@
 
 ## Info utili per chi naviga
 
-* [Cose da portare](liste.md)
+* Bagagli in una sacca morbida (no trolley o valigie rigide)
 * [Lista per cambusa](lista_cambusa.md)
-
-## Note tecniche
-
 * [Norme essenziali](norme.md)
-* [Istruzioni per la sicurezza](safety.md)
-* [Lista per checkin e checkout](checkin-checkout_list.md)
 
 ## Links utili per Ovni
 
