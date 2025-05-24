@@ -435,16 +435,21 @@ function loadGeojson(name, url, styleFunc, visible, callback) {
         map.addLayer(vectorLayer);
 
         if (callback) callback(vectorLayer);
+    })
+    .catch((error) => {
+      if (callback) callback();
     });
+    ;
 }
 
 const centerMap = function (layer) {
-  const currentFeats = layer.getSource().getFeatures()
-  if ( currentFeats ) {
+
+  if ( layer ) {
+    const currentFeats = layer.getSource().getFeatures()
     const currentLoc = currentFeats[0].getGeometry().getCoordinates();
     console.log ("CURRENT",currentLoc);
     ol3d.getCamera().setCenter(currentLoc);
-  } else if (layer.get('name') == 'current') {
+  } else {
     loadGeojson('current_dev', 'data/track-api.geojson',current_loc_style, true, centerMap)
   }
 }
