@@ -107,7 +107,6 @@ class OverlayHandler {
     if (this.clickedFeat) this.clickedFeat.setStyle(null);
     const coordinates = event.coordinate;
     console.log(event);
-    this.setupOverlay()
     this.overlay.setPosition(coordinates);
     const features = [];
     const me = this;
@@ -120,7 +119,11 @@ class OverlayHandler {
         this.clickedFeat = features[0][1]
         this.clickedFeat.setStyle(selectionStyle)
     }
-    
+    if ( !ol3d.getEnabled() ) {
+      document.querySelectorAll(".ol-overlaycontainer").forEach(e => {
+        if ( e.parentElement.getAttribute("class") != "ol-viewport" ) e.style.display = 'none'
+      });
+    }
   }
 
   onClickHandlerCS(event) {
@@ -159,8 +162,6 @@ class OverlayHandler {
       coords = coords.concat([height]);
     }
 
-    // const transformedCoords = transform(coords, getProjection('EPSG:4326'), 'EPSG:3857');
-    this.setupOverlay()
     this.overlay.setPosition(coords);
     console.log(coords)
     this.setOverlayContent(this.overlay, olLayer, olFeature);
@@ -170,6 +171,7 @@ class OverlayHandler {
 
   setOverlayContent(overlay, layer, feature) {
       const element = overlay.getElement();
+      element.innerHTML = "";
       const div = document.createElement('div');
       div.classList.add('popup-content');
       div.onclick = this.onCloseClick.bind(this);
@@ -197,25 +199,6 @@ class OverlayHandler {
       element.style.visibility = "visible";
       
 
-
-      // div.innerHTML = `BOAT:<code><a src="https://www.libresailing.eu/map/#2/7.4/0.3" target="_blank">${fid}</a></code>`;
-      /*
-      $(element).popover('destroy');
-      $(element).popover({
-        'placement': 'right',
-        'animation': true,
-        'html': true,
-        'content': div
-      });
-      $(element).popover('show');
-      $(element).find('.popover').each(function(i){
-        i.css('left', '-12.5px')
-      });
-      $(element).find('.arrow').each(function(i){
-        i.css('left', '15px')
-      });
-      */
-
   }
 
   resetFeature() {
@@ -233,9 +216,8 @@ class OverlayHandler {
   }
 
   setupOverlay() {
-    if (this.overlay) this.ol2d.removeOverlay(this.overlay);
     const element = document.getElementById('popup').cloneNode(true);
-    this.overlay = new olOverlay({element:element, stopEvent: true});
+    this.overlay = new olOverlay({element:element, stopEvent: false});
     this.ol2d.addOverlay(this.overlay);
     this.overlay.getElement().style.visibility = "hidden";
   }
@@ -320,6 +302,26 @@ const timezonesStyle = function (feature) {
   });
 };
 
+
+const gridStyle = function (feature) {
+  const text = feature.get('right') == 180 ? feature.get('top') : feature.get('right');
+  return new olStyleStyle({
+    stroke: new olStyleStroke({
+      color: "#aaaaaa",
+      width: mobile ? 4 : 1
+    }),
+    text: new Text({
+      font: '14px Arial,sans-serif',
+      textBaseline: 'middle',
+      text: `${text}`,
+      textAlign: 'center',
+      fill: new Fill({
+        color: "#888888",
+      }),
+    })
+  });
+};
+
 const selectionStyle = new olStyleStyle({
   fill: new olStyleFill({
     color: [255, 255, 255, 0.6]
@@ -327,6 +329,12 @@ const selectionStyle = new olStyleStyle({
   stroke: new olStyleStroke({
     color: [0, 153, 255, 1],
     width: mobile ? 12 : 4
+  }),    
+  image: new CircleStyle({
+    radius: mobile ? 15 : 10,
+    fill: new olStyleFill({
+        color: [0, 153, 255, 1]
+    })
   })
 });
 
@@ -400,6 +408,9 @@ $( ".frontover" ).on( "click", function() {
   console.log(checkosm);
   map.removeLayer(checkosm);
   map.addLayer(osm);
+  if ( !ol3d.getEnabled() ) {
+    document.querySelectorAll(".ol-overlaycontainer-stopevent").forEach(e => e.style.display = 'none');
+  }
 } );
 
 if (mobile) {
@@ -410,14 +421,16 @@ if (mobile) {
   $( ".dropdown-item" ).addClass('dropdownitemsmall');
 }
 
-function loadGeojson(name, url, styleFunc, visible, callback) {
-    console.log(url);
-    fetch(url, {
+function loadGeojson(params) {
+
+    console.log(params.url);
+    fetch(params.url, {
       mode: 'same-origin'
     })
     .then((response) => response.json())
     .then((json) => {
         console.log(json); // this will show the info it in firebug console
+        addTocItems(params)
         const vectorSource = new VectorSource({
           features: new GeoJSON().readFeatures(json),
           // url: '/sailing_trips.geojson',
@@ -426,20 +439,66 @@ function loadGeojson(name, url, styleFunc, visible, callback) {
         });
 
         const vectorLayer = new VectorLayer({
-          name: name,
-          visible: visible,
+          name: params.name,
+          visible: params.visible,
           source: vectorSource,
-          style: styleFunc,
+          style: params.styleFunc,
         });
         
         map.addLayer(vectorLayer);
 
-        if (callback) callback(vectorLayer);
+        if (params.callback) params.callback(vectorLayer);
+
     })
     .catch((error) => {
-      if (callback) callback();
+      if (params.callback) params.callback();
     });
     ;
+}
+
+const addTocItems = function (params) {
+  const anchor = document.createElement('a');
+  anchor.classList.add('dropdown-item');
+  anchor.setAttribute('href', '#')
+
+  const div = document.createElement('div');
+  div.classList.add('form-check');
+
+  const input = document.createElement('input');
+  input.classList.add('form-check-input');
+  input.setAttribute('type', 'checkbox');
+  input.setAttribute('name', params.name);
+  input.setAttribute('id', params.name);
+  input.setAttribute('value', params.name);
+  if (params.visible) input.setAttribute('checked', true);
+
+  input.addEventListener('change', (event) => {  
+    const layername = event.currentTarget.getAttribute( "name" );
+    const layer = map.getLayers().getArray().find(layer => layer.get('name') == layername);
+    if (event.currentTarget.checked) {
+      layer.setVisible(true)
+    } else {
+      layer.setVisible(false)
+    }
+    console.log( "Toggle", layername,layer, event.currentTarget.checked);
+  })
+
+
+  const label = document.createElement('label');
+  label.classList.add('form-check-label');
+  label.setAttribute('for', params.name);
+  if (params.label) {
+    label.innerHTML = params.label
+  } else {
+    label.innerHTML = params.name
+  }
+
+  div.appendChild(input);
+  div.appendChild(label);
+  anchor.appendChild(div);
+
+  const toc = document.getElementById("toc")
+  toc.appendChild(anchor);
 }
 
 const centerMap = function (layer) {
@@ -450,35 +509,95 @@ const centerMap = function (layer) {
     console.log ("CURRENT",currentLoc);
     ol3d.getCamera().setCenter(currentLoc);
   } else {
-    loadGeojson('current_dev', 'data/track-api.geojson',current_loc_style, true, centerMap)
+    loadGeojson({
+      name:'current_dev',
+      url: 'data/track-api.geojson',
+      visible: true,
+      label: '',
+      callback: centerMap,
+      styleFunc: current_loc_style
+    });
   }
 }
 
-loadGeojson('current', '/tracking/track-api.php?last=1&type=geojson',current_loc_style, true, centerMap)
-loadGeojson('trips', 'data/rotte.geojson',redStyle, true)
-loadGeojson('highlights', 'data/highlights.geojson',greenStyle, true)
-loadGeojson('future', 'data/future.geojson',greenStyle, true)
-loadGeojson('tracks', 'data/tracks.geojson',darkRedStyle, true)
-loadGeojson('timezones', 'timezones.geojson',timezonesStyle, false)
+loadGeojson({
+  name:'current',
+  url: '/tracking/track-api.php?last=1&type=geojson',
+  visible: true,
+  label: 'Current location</br>' +
+         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
+         '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
+  styleFunc: current_loc_style,
+  callback: centerMap
+});
 
-$(".dropdown-item").on( "click", function() {
-  const formCheck  = $(this).children('div[class="form-check"]')
-  const checkboxElem = $(formCheck).children('input');
-  const checked = $(checkboxElem).is(":checked")
-  const layername = $(checkboxElem).attr( "name" );
-  const layer = map.getLayers().getArray().find(layer => layer.get('name') == layername);
-  if (checked) {
-    layer.setVisible(true)
-  } else {
-    layer.setVisible(false)
-  }
-  console.log( "Toggle", checkboxElem.attr( "name" ), layer, checked);
-} );
+loadGeojson({
+  name:'trips',
+  url: 'data/rotte.geojson',
+  visible: true,
+  label: 'Sailing trips </br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#fc5603;stroke:#fc5603;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> as skipper</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#fc5603;stroke:#fc5603;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:15,15;stroke-dashoffset:0" />' +
+         '</svg> as crew</br>',
+  styleFunc: redStyle
+});
 
+loadGeojson({
+  name:'highlights',
+  url: 'data/highlights.geojson',
+  visible: true,
+  label: 'Highlights</br>' +
+         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
+         '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#009917" /></svg>',
+  styleFunc: greenStyle
+});
 
-//const lastLoc = [parseFloat(lastLocList[1]), parseFloat(lastLocList[0]), 100]
-//console.log(lastLoc);
-// const transformedCoords = transform(lastLoc, getProjection('EPSG:4326'), 'EPSG:3857')
-// console.log(transformedCoords);
-// map.getView().setCenter(transformedCoords);
-//ol3d.getCamera().setCenter(lastLoc);
+loadGeojson({
+  name:'future',
+  url: 'data/future.geojson',
+  visible: true,
+  label: 'Future</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#009917;stroke:#009917;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: greenStyle
+});
+
+loadGeojson({
+  name:'tracks',
+  url: 'data/tracks.geojson',
+  visible: true,
+  label: 'Tracks</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: darkRedStyle
+});
+
+loadGeojson({
+  name:'timezones',
+  url: 'data/timezones.geojson',
+  visible: false,
+  label: 'Timezones</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#0099ff;stroke:#0099ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: timezonesStyle
+});
+
+loadGeojson({
+  name:'grid',
+  url: 'data/latlongrid.geojson',
+  visible: false,
+  label: 'Grid',
+  styleFunc: gridStyle
+});
+
