@@ -23,3 +23,7 @@ npm-debug.log
 
 # Dependency packages files
 node_modules/
+
+site/.well-known/
+site/tracking/track_config.php
+site/map
