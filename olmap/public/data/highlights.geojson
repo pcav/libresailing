@@ -16,6 +16,7 @@
 { "type": "Feature", "properties": { "name": "FSM", "arrival": "2025-12-01" }, "geometry": { "type": "Point", "coordinates": [ 151.783, 7.348 ] } },
 { "type": "Feature", "properties": { "name": "Nihon", "arrival": "2026-04-14" }, "geometry": { "type": "Point", "coordinates": [ 138.065, 33.553 ] } },
 { "type": "Feature", "properties": { "name": "Madagascar", "arrival": "2026-12-01" }, "geometry": { "type": "Point", "coordinates": [ 46.376, -14.593 ] } },
-{ "type": "Feature", "properties": { "name": "Langebaan", "arrival": "2026-04-01" }, "geometry": { "type": "Point", "coordinates": [ 17.919, -33.095 ] } }
+{ "type": "Feature", "properties": { "name": "Langebaan", "arrival": "2026-04-01" }, "geometry": { "type": "Point", "coordinates": [ 17.919, -33.095 ] } },
+{ "type": "Feature", "properties": { "name": "Açores", "arrival": null }, "geometry": { "type": "Point", "coordinates": [ -28.364, 38.383 ] } }
 ]
 }
