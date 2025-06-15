@@ -9,7 +9,7 @@
 { "type": "Feature", "properties": { "name": "Guyane française", "arrival": "2024-12-15" }, "geometry": { "type": "Point", "coordinates": [ -52.764, 5.34 ] } },
 { "type": "Feature", "properties": { "name": "Guna Yala", "arrival": "2025-02-15" }, "geometry": { "type": "Point", "coordinates": [ -78.368, 9.418 ] } },
 { "type": "Feature", "properties": { "name": "Easter Island", "arrival": "2025-05-15" }, "geometry": { "type": "Point", "coordinates": [ -109.437, -27.145 ] } },
-{ "type": "Feature", "properties": { "name": "Pitcairn", "arrival": "2025-06-01" }, "geometry": { "type": "Point", "coordinates": [ -130.105, -24.958 ] } },
+{ "type": "Feature", "properties": { "name": "Pitcairn", "arrival": "2025-06-01" }, "geometry": { "type": "Point", "coordinates": [ -130.094888631562526, -25.067500609342797 ] } },
 { "type": "Feature", "properties": { "name": "Gambier", "arrival": "2025-06-15" }, "geometry": { "type": "Point", "coordinates": [ -134.979, -23.149 ] } },
 { "type": "Feature", "properties": { "name": "Tuamotu", "arrival": "2025-07-01" }, "geometry": { "type": "Point", "coordinates": [ -141.504, -17.8 ] } },
 { "type": "Feature", "properties": { "name": "Marquises", "arrival": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -140.082, -9.001 ] } },
