@@ -20,6 +20,27 @@ import olOverlay from 'ol/Overlay.js';
 import olStyleStyle from 'ol/style/Style.js';
 import olStyleStroke from 'ol/style/Stroke.js';
 import olStyleFill from 'ol/style/Fill.js';
+import {getTopLeft, getWidth} from 'ol/extent.js';
+import {get as getProjection} from 'ol/proj.js';
+import WMTS from 'ol/source/WMTS.js';
+import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
+import ImageTile from 'ol/source/ImageTile.js';
+
+import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
+import {optionsFromCapabilities} from 'ol/source/WMTS.js';
+
+const projectionWebMercator = getProjection('EPSG:3857');
+const projectionExtent = projectionWebMercator.getExtent();
+const size = getWidth(projectionExtent) / 256;
+const resolutions = new Array(19);
+const matrixIds = new Array(19);
+for (let z = 0; z < 19; ++z) {
+  // generate resolutions and matrixIds arrays for this WMTS
+  resolutions[z] = size / Math.pow(2, z);
+  matrixIds[z] = z;
+}
+
+const parser = new WMTSCapabilities();
 
 const Cesium = window.Cesium;
 
@@ -370,17 +391,9 @@ const styleFunction = function (feature) {
 
 const decode_layers = {};
 
-const osm = new TileLayer({
-    source: new OSM()
-  })
-
-decode_layers["osm"] = osm
-
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
-  layers: [
-    osm,
-  ],
+  layers: [],
   target: 'map',
   view: new View({
     center: [0, 0],
@@ -395,6 +408,45 @@ const ol3d = new OLCesium({
         return Cesium.JulianDate.now();
   }
 });
+
+
+fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST=GetCapabilities')
+  .then(function (response) {
+    return response.text();
+  })
+  .then(function (text) {
+    const result = parser.read(text);
+    const options = optionsFromCapabilities(result, {
+      layer: 'Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual',
+      matrixSet: 'GoogleMapsCompatible_Level12',
+    });
+
+    decode_layers.landsat = new TileLayer({
+          opacity: 1,
+          name: 'landsat',
+          basemap: true,
+          visible: true,
+          source: new WMTS(options),
+        })
+
+    decode_layers.osm = new TileLayer({
+        source: new OSM(),
+        name: 'osm',
+        basemap: true,
+        visible: false,
+      })
+
+
+    Object.keys(decode_layers).forEach(function(key,index) {
+      map.addLayer( decode_layers[key] )
+      addTocItems({
+        name: decode_layers[key].get('name'),
+        visible: decode_layers[key].get('visible'),
+        basemap: true,
+      })
+    })
+
+  });
 
 ol3d.setEnabled(true);
 const scene = ol3d.getCesiumScene();
@@ -466,15 +518,24 @@ const addTocItems = function (params) {
 
   const input = document.createElement('input');
   input.classList.add('form-check-input');
-  input.setAttribute('type', 'checkbox');
-  input.setAttribute('name', params.name);
+  input.setAttribute('type', params.basemap ? 'radio' : 'checkbox');
+  input.setAttribute('name', params.basemap ? 'basemap' : params.name);
   input.setAttribute('id', params.name);
   input.setAttribute('value', params.name);
   if (params.visible) input.setAttribute('checked', true);
 
   input.addEventListener('change', (event) => {  
-    const layername = event.currentTarget.getAttribute( "name" );
+    const layername = event.currentTarget.getAttribute( "id" );
     const layer = map.getLayers().getArray().find(layer => layer.get('name') == layername);
+
+    if (event.currentTarget.getAttribute( "name" ) == 'basemap') {
+        map.getLayers().getArray().forEach((layer) => { 
+          if (layer.get("basemap")) {
+            layer.setVisible(false) 
+          }
+        } );
+    }
+
     if (event.currentTarget.checked) {
       layer.setVisible(true)
     } else {
@@ -497,7 +558,7 @@ const addTocItems = function (params) {
   div.appendChild(label);
   anchor.appendChild(div);
 
-  const toc = document.getElementById("toc")
+  const toc = document.getElementById(params.basemap ? 'basemap' : 'toc')
   toc.appendChild(anchor);
 }
 
@@ -522,7 +583,8 @@ const centerMap = function (layer) {
 
 loadGeojson({
   name:'current',
-  url: '/tracking/track-api.php?last=1&type=geojson',
+  //url: '/tracking/track-api.php?last=1&type=geojson',
+  url: '',
   visible: true,
   label: 'Current location</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
