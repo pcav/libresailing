@@ -583,8 +583,8 @@ const centerMap = function (layer) {
 
 loadGeojson({
   name:'current',
-  //url: '/tracking/track-api.php?last=1&type=geojson',
-  url: '',
+  url: '/tracking/track-api.php?last=1&type=geojson',
+  //url: '',
   visible: true,
   label: 'Current location</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
