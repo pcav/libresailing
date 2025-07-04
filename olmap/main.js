@@ -425,7 +425,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
           opacity: 1,
           name: 'landsat',
           basemap: true,
-          visible: true,
+          visible: false,
           source: new WMTS(options),
         })
 
@@ -433,7 +433,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
         source: new OSM(),
         name: 'osm',
         basemap: true,
-        visible: false,
+        visible: true,
       })
 
 
