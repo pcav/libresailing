@@ -449,7 +449,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
           opacity: 1,
           name: 'landsat',
           basemap: true,
-          visible: true,
+          visible: false,
           source: new WMTS(options),
         })
 
@@ -457,7 +457,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
         source: new OSM(),
         name: 'osm',
         basemap: true,
-        visible: false,
+        visible: true,
       })
 
 
@@ -607,8 +607,8 @@ const centerMap = function (layer) {
 
 loadGeojson({
   name:'current',
-  //url: '/tracking/track-api.php?last=1&type=geojson',
-  url: '',
+  url: '/tracking/track-api.php?last=1&type=geojson',
+  //url: '',
   visible: true,
   label: 'Current location</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
