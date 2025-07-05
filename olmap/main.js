@@ -259,8 +259,8 @@ const greenStyle = new olStyleStyle({
     radius: mobile ? 15 : 10,
     fill: new olStyleFill({
         color: [0, 153, 23, 1]
-    }),
-}),
+    })
+  })
 });
 
 const redStyle = function (feature) {
@@ -312,7 +312,7 @@ const timezonesStyle = function (feature) {
       width: mobile ? 4 : 1
     }),
     text: new Text({
-      font: '14px Arial,sans-serif',
+      font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
       textBaseline: 'middle',
       text: `${text}`,
       textAlign: 'center',
@@ -332,7 +332,7 @@ const gridStyle = function (feature) {
       width: mobile ? 4 : 1
     }),
     text: new Text({
-      font: '14px Arial,sans-serif',
+      font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
       textBaseline: 'middle',
       text: `${text}`,
       textAlign: 'center',
@@ -359,6 +359,30 @@ const selectionStyle = new olStyleStyle({
   })
 });
 
+const highlight_style = function (feature) {
+  console.log(feature.getProperties());
+  const text = feature.get('name'); // + ' ' + feature.get('arrival');
+  return new olStyleStyle({
+    image: new CircleStyle({
+        radius: 10,
+        fill: new olStyleFill({
+            color: "#009917"
+        })
+    }),
+    text: new Text({
+        font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
+        textBaseline: 'middle',
+        text: `${text}`,
+        offsetX: 16,
+        textAlign: 'left',
+        //rotation: -0.785398164, //45
+        fill: new Fill({
+          color: "#009917",
+        }),
+    })
+  })
+}
+
 const current_loc_style = function (feature) {
   console.log(feature.getProperties());
   const text = feature.get('time');
@@ -370,7 +394,7 @@ const current_loc_style = function (feature) {
         })
     }),
     text: new Text({
-        font: '15px Arial,sans-serif',
+        font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
         textBaseline: 'middle',
         text: `${text}`,
         offsetX: 16,
@@ -616,7 +640,7 @@ loadGeojson({
   label: 'Highlights</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
          '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#009917" /></svg>',
-  styleFunc: greenStyle
+  styleFunc: highlight_style
 });
 
 loadGeojson({
