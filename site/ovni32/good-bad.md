@@ -1,30 +1,17 @@
-# Norme essenziali
+# My experience
 
-In caso il comandante sia impossibilitato al comando, queste le cose essenziali da sapere:
+A list of my experiences with technicians and service providers.
 
-## Precedenza
+## The good
 
--   a **motore**: si dà la precedenza alla barca che viene da diritta,
-    passandole a poppa
--   a **vela**: si dà la precedenza a chi ha mure a diritta; se
-    entrambe, si dà la precedenza alla barca sottovento
--   quando si arriva **da dietro** ad una barca, questa ha sempre
-    precedenza
+- [Eletttroblu di Antonio Toso](http://www.elettroblu.com/)
+- 
 
-## Entrata in porto
+## Mixed
 
--   chi esce ha la precedenza
--   si tiene sempre la diritta (a meno di porti particolari)
--   max 3 nodi
--   si entra con il verde a diritta, si esce con il rosso a diritta
+- [Eco-Worthy](https://www.eco-worthy.com/): products very cheap, quality average to low, the best possible assistance on earth
 
-## Comando
 
-Da convenzioni e leggi marinare, il comandante:
+## The bad
 
--   per la sicurezza di tutti, esercita autorità indiscussa
--   in casi estremi, può imporre lo sbarco di uno o più membri della ciurma.
-
-## Navigazione
-
-- [Piccolo manuale di vela](docs/useful-stuff/manuale_navigazione_a_vela_low-res.pdf)
+- 
