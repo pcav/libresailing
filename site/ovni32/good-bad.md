@@ -4,7 +4,8 @@ A list of my experiences with producers, technicians, and service providers.
 
 ## Good
 
-- [Eletttroblu di Antonio Toso](http://www.elettroblu.com/)
+- [Eletttroblu di Antonio Toso](http://www.elettroblu.com/): marine electrician
+- [Onda Blu](https://www.ondablumare.it/): rigger in Alghero, Sardinia
 - [Victron Energy](https://www.victronenergy.com/)
 
 ## Mixed
@@ -14,4 +15,4 @@ A list of my experiences with producers, technicians, and service providers.
 
 ## Bad
 
-- 
+- Shipyard in Monastir: absymal quality of work
