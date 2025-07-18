@@ -16,3 +16,4 @@ A list of my experiences with producers, technicians, and service providers.
 ## Bad
 
 - Shipyard in Monastir: absymal quality of work
+- Exide batteries
