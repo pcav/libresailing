@@ -7,6 +7,7 @@ A list of my experiences with producers, technicians, and service providers for 
 - [Eletttroblu di Antonio Toso](http://www.elettroblu.com/): marine electrician
 - [Onda Blu](https://www.ondablumare.it/): rigger in Alghero, Sardinia
 - [Victron Energy](https://www.victronenergy.com/)
+- [Antal](https://www.antal.it/): low friction rings, clutches
 
 ## Mixed
 
