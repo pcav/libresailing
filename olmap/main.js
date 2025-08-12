@@ -621,6 +621,7 @@ loadGeojson({
   zIndex: 30,
 });
 
+/*
 loadGeojson({
   name:'trips',
   url: 'data/rotte.geojson',
@@ -636,7 +637,7 @@ loadGeojson({
          '</svg> as crew</br>',
   styleFunc: redStyle,
   zIndex: 20,
-});
+});*/
 
 loadGeojson({
   name:'highlights',
