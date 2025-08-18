@@ -451,6 +451,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
           basemap: true,
           visible: false,
           source: new WMTS(options),
+          zIndex: 2,
         })
 
     decode_layers.osm = new TileLayer({
@@ -458,6 +459,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
         name: 'osm',
         basemap: true,
         visible: true,
+        zIndex: 1,
       })
 
 
@@ -519,6 +521,7 @@ function loadGeojson(params) {
           visible: params.visible,
           source: vectorSource,
           style: params.styleFunc,
+          zIndex: params.zIndex
         });
         
         map.addLayer(vectorLayer);
@@ -614,9 +617,11 @@ loadGeojson({
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
          '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
   styleFunc: current_loc_style,
-  callback: centerMap
+  callback: centerMap,
+  zIndex: 30,
 });
 
+/*
 loadGeojson({
   name:'trips',
   url: 'data/rotte.geojson',
@@ -630,8 +635,9 @@ loadGeojson({
          '<path d="M 0,5 H 100"' +
          'style="fill:#fc5603;stroke:#fc5603;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:15,15;stroke-dashoffset:0" />' +
          '</svg> as crew</br>',
-  styleFunc: redStyle
-});
+  styleFunc: redStyle,
+  zIndex: 20,
+});*/
 
 loadGeojson({
   name:'highlights',
@@ -640,7 +646,8 @@ loadGeojson({
   label: 'Highlights</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
          '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#009917" /></svg>',
-  styleFunc: highlight_style
+  styleFunc: highlight_style,
+  zIndex: 21,
 });
 
 loadGeojson({
@@ -652,7 +659,8 @@ loadGeojson({
          '<path d="M 0,5 H 100"' +
          'style="fill:#009917;stroke:#009917;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
          '</svg> </br>',
-  styleFunc: greenStyle
+  styleFunc: greenStyle,
+  zIndex: 10,
 });
 
 loadGeojson({
@@ -664,7 +672,8 @@ loadGeojson({
          '<path d="M 0,5 H 100"' +
          'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
          '</svg> </br>',
-  styleFunc: darkRedStyle
+  styleFunc: darkRedStyle,
+  zIndex: 10,
 });
 
 loadGeojson({
@@ -676,7 +685,8 @@ loadGeojson({
          '<path d="M 0,5 H 100"' +
          'style="fill:#0099ff;stroke:#0099ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
          '</svg> </br>',
-  styleFunc: timezonesStyle
+  styleFunc: timezonesStyle,
+  zIndex: 10,
 });
 
 loadGeojson({
@@ -684,6 +694,7 @@ loadGeojson({
   url: 'data/latlongrid.geojson',
   visible: false,
   label: 'Grid',
-  styleFunc: gridStyle
+  styleFunc: gridStyle,
+  zIndex: 10,
 });
 
