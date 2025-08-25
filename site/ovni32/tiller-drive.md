@@ -11,21 +11,21 @@ Raymarine Tiller Drive Replacement kit
 ](https://pcnautic.com/en/product/st4000-tiller-drive-replacement-set).
 The kit includes a [HB-DJ809 Linear Actuator](https://www.hbactuator.com/linear-actuator/hb-dj809.html) by [Wuxi Hongba](https://wxhongba.com), the water resistant wiring, plugs and boxes, and the support that fits in the Raymarine socket.
 Major advantages over the Raymarine equivalent are, at least on paper:
-* integrated drive position sensor (no need to buy an extra product, difficult to install on many boats including mine, rather exposed to damage)
-* integrated stop at the end of the arm extension
-* larger extension (>10°, 40 instead of 28°)
-* less noisy
-* less power hungry
-* more powerful
-* stronger built.
+    * integrated drive position sensor (no need to buy an extra product, difficult to install on many boats including mine, rather exposed to damage)
+    * integrated stop at the end of the arm extension
+    * larger extension (>10°, 40 instead of 28°)
+    * less noisy
+    * less power hungry
+    * more powerful
+    * stronger built.
 In addition, it's also far cheaper.
 So, worth a try.
 
-## The package
+### The package
 All the components appear solid and of good quality.
 It's disappointing that the package does not include any instruction for the installation. The only hint I could get is a [video in Dutch](https://www.youtube.com/watch?v=gYL0_VjVxGI) and a [wiring schema](https://pcnautic.com/en/product/st4000-tiller-drive-replacement-set).
 
-## Installing
+### Installing
 
 Fairly straightforward, with a few exceptions:
 * the wiring in the schema above was wrong (the firm sent a correction straight away)
@@ -34,7 +34,7 @@ Fairly straightforward, with a few exceptions:
 In general I'd preferred if the thin cables were pre-stripped to the correct length.
 The positive side is that the firm responded quickly to my questions, albeit answers were often a bit short, and required further clarifications.
 
-## Commissioning
+### Commissioning
 
 I followed the procedure as described in the Raymarine ACU-100 manual, with a few issues:
 * the procedure requires to move the tiller arm at the center, left, right, and center again; this cannot be done by hand, so I had to bring power from the battery and move it by touching the motor +- wiring. At the end of this part of the procedure I had to put back the wires from ACU for its testing
