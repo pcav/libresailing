@@ -10,6 +10,7 @@ Therefore I looked for alternatives, and I found the [
 Raymarine Tiller Drive Replacement kit
 ](https://pcnautic.com/en/product/st4000-tiller-drive-replacement-set).
 The kit includes a [HB-DJ809 Linear Actuator](https://www.hbactuator.com/linear-actuator/hb-dj809.html) by [Wuxi Hongba](https://wxhongba.com), the water resistant wiring, plugs and boxes, and the support that fits in the Raymarine socket.
+Wuxi Hongba was kind and professional sending me full and very detailed specs of the actuator. Plenty of data. By contrast, Raymarine doesn't provide specifications, so it's difficult to compare. Duty cycle is 25%, much more than enough in average sea conditions, probably not enough in a storm. However, the cycle limits seem related mostly to temperature, and in a storm the actuator should dissipate heat quite easily. I'll check in real use and over time. It must be noted that an extra actuator is very cheap (100-150 € I believe), so having spares is not an issue.
 Major advantages over the Raymarine equivalent are, at least on paper:
 - integrated drive position sensor (no need to buy an extra product, difficult to install on many boats including mine, rather exposed to damage)
 - integrated stop at the end of the arm extension
