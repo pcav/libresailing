@@ -52,6 +52,7 @@ First test (102 NM, 1-18 kn, 1 m swell, mostly broad and beam reach):
 - power consumption seems smaller (further measurements needed)
 - higher strength confirmed
 - general impression of solidity confirmed.
+The mouvement IN is very smooth, that OUT is confirmed discontinuous, but it doesn't seem to be a problem.
 It remains to be seen:
 - response in very rough conditions (>30 kn, >2 m swell)
 - durability over time.
