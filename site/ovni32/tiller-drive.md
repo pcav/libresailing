@@ -44,7 +44,14 @@ I followed the procedure as described in the Raymarine ACU-100 manual, with a fe
 
 ### Test at sea
 
-[To be completed]
-The first impressions confirmed what was expected (noise, switch, sensor). Of course, the power and quality of the construction have to be tested ofer time, in a variety of sea conditions.
-I've done just a few miles to check that everything was working.
-I'll report my impressions after some rougher crossing.
+First test (102 NM, 1-18 kn, 1 m swell, mostly broad and beam reach):
+- sensor works well; less movement of the bar
+- stop at the end work flawlessly (no more *drrrrrr*)
+- extension useful for automated tacking
+- noise reduced by far, often insignificant
+- power consumption seems smaller (further measurements needed)
+- higher strength confirmed
+- general impression of solidity confirmed.
+It remains to be seen:
+- response in very rough conditions (>30 kn, >2 m swell)
+- durability over time.
