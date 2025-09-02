@@ -18,7 +18,8 @@ Major advantages over the Raymarine equivalent are, at least on paper:
 - less noisy
 - less power hungry
 - more powerful
-- stronger built.
+- stronger built
+- stronger, waterproof connectors SD20.
 In addition, it's also far cheaper.
 So, worth a try.
 
