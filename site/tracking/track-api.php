@@ -161,13 +161,6 @@ try {
     }
 }
 
-
-//-------------------------------------------------------------------------
-// Default to empty result.
-//-------------------------------------------------------------------------
-$points = [];
-
-
 //-------------------------------------------------------------------------
 // Can output to GPX or GeoJSON format.
 //-------------------------------------------------------------------------
@@ -188,6 +181,9 @@ if (array_key_exists('type', $_REQUEST)) {
 //-------------------------------------------------------------------------
 if (array_key_exists('last', $_REQUEST)) {
 
+    // Default to empty result.
+    $points = [];
+
     $last = 1;
     if (is_numeric($_REQUEST['last'])) $last = intval($_REQUEST['last']);
     if ($last < 1) $last = 1;
@@ -205,25 +201,47 @@ if (array_key_exists('last', $_REQUEST)) {
     usort($points, function ($a, $b) {
         return $a['timestamp'] <=> $b['timestamp'];
     });
+
+    //-------------------------------------------------------------------------
+    // Produces the output in the requested format.
+    //-------------------------------------------------------------------------
+    if ($output_type == 'GPX') {
+        // Initialize the GPX XML.
+        $xw = gpx_begin();
+        gpx_add_points($xw, $points);
+        gpx_end($xw);
+        header('Content-type: text/xml');
+        echo xmlwriter_output_memory($xw);
+    } elseif ($output_type == 'GEOJSON') {
+        // Initialize the GeoJSON array.
+        $geojson = geojson_begin();
+        geojson_add_points($geojson, $points);
+        header('Content-type: application/json');
+        echo json_encode($geojson);
+    }
+    exit();
 }
 
-
 //-------------------------------------------------------------------------
-// Produces the output in the requested format.
+// $_REQUEST['trkline']: get the trkline_ovnifsm view.
 //-------------------------------------------------------------------------
-if ($output_type == 'GPX') {
-    // Initialize the GPX XML.
-    $xw = gpx_begin();
-    gpx_add_points($xw, $points);
-    gpx_end($xw);
-    header('Content-type: text/xml');
-    echo xmlwriter_output_memory($xw);
-} elseif ($output_type == 'GEOJSON') {
-    // Initialize the GeoJSON array.
-    $geojson = geojson_begin();
-    geojson_add_points($geojson, $points);
-    header('Content-type: application/json');
-    echo json_encode($geojson);
+if (array_key_exists('trkline', $_REQUEST)) {
+    // geom SRID: 4326.
+    $sql = sprintf('SELECT ST_AsGeoJSON(geom) AS trkline FROM trkline_ovnifsm');
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([]);
+    $geom = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($geom === FALSE) {
+        $geojson = [
+            'type' => 'LineString',
+            'coordinates' => []];
+        header('Content-type: application/json');
+        echo json_encode($geojson);
+    } else {
+        header('Content-type: application/json');
+        echo $geom['trkline'];
+    }
+    exit();
 }
 
 ?>
