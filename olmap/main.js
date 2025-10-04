@@ -1,4 +1,5 @@
-import Feature from 'ol/Feature.js';
+import Polygon from 'ol/geom/Polygon.js';
+import Point from 'ol/geom/Point.js';
 import Point from 'ol/geom/Point.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
@@ -25,6 +26,7 @@ import {get as getProjection} from 'ol/proj.js';
 import WMTS from 'ol/source/WMTS.js';
 import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
 import ImageTile from 'ol/source/ImageTile.js';
+import Feature from 'ol/Feature.js';
 
 import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import {optionsFromCapabilities} from 'ol/source/WMTS.js';
@@ -589,6 +591,18 @@ const addTocItems = function (params) {
   toc.appendChild(anchor);
 }
 
+const addRecentTrackline = function (layer) {
+  if ( layer ) {
+    fetch('data/trackline-api-mock.json')
+    .then((response) => response.json())
+    .then((json) => {
+        console.log(json); // this will show the info it in firebug console
+        const newGeom = new GeoJSON().readGeometry(json);
+        const newFeat = new Feature({geometry: newGeom});
+        layer.getSource().addFeature(newFeat);
+    }
+}
+
 const centerMap = function (layer) {
 
   if ( layer ) {
@@ -673,6 +687,7 @@ loadGeojson({
          'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
          '</svg> </br>',
   styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
   zIndex: 10,
 });
 
