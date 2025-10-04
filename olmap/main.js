@@ -1,5 +1,3 @@
-import Polygon from 'ol/geom/Polygon.js';
-import Point from 'ol/geom/Point.js';
 import Point from 'ol/geom/Point.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
@@ -593,14 +591,19 @@ const addTocItems = function (params) {
 
 const addRecentTrackline = function (layer) {
   if ( layer ) {
-    fetch('data/trackline-api-mock.json')
+    // fetch('data/trackline-api-mock.json')
+    fetch('/tracking/track-api.php?trkline')
     .then((response) => response.json())
     .then((json) => {
         console.log(json); // this will show the info it in firebug console
         const newGeom = new GeoJSON().readGeometry(json);
         const newFeat = new Feature({geometry: newGeom});
         layer.getSource().addFeature(newFeat);
-    }
+    })
+    .catch((error) => {
+      console.log("Error fetching recent trackline", error);
+    });
+  }
 }
 
 const centerMap = function (layer) {
