@@ -3,7 +3,7 @@
 "name": "future",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
-{ "type": "Feature", "properties": { "period": "jun-nov  2025", "Nautical Miles": 2910 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -148.059504241266097, -14.703057536838031 ], [ -140.225, -8.967 ], [ -140.226, -8.967 ] ] ] } },
+{ "type": "Feature", "properties": { "period": "jun-nov  2025", "Nautical Miles": 2910 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -140.91208, -18.098931667 ], [ -140.225, -8.967 ], [ -140.226, -8.967 ] ] ] } },
 { "type": "Feature", "properties": { "period": "dec 2025", "Nautical Miles": 2396 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -140.226, -8.967 ], [ -150.177, -10.657 ], [ -179.927, -11.262 ] ] ] } },
 { "type": "Feature", "properties": { "period": "feb 2026", "Nautical Miles": 2415 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 179.975, -11.361 ], [ 172.865, 1.381 ], [ 158.243, 6.755 ], [ 151.783, 7.348 ] ] ] } },
 { "type": "Feature", "properties": { "period": "mar 2026", "Nautical Miles": 2208 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 151.783, 7.348 ], [ 148.781, 7.755 ], [ 144.539, 9.974 ], [ 144.539, 18.433 ], [ 140.796, 29.361 ], [ 138.084, 33.554 ] ] ] } },
