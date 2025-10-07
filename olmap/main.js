@@ -1,4 +1,3 @@
-import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
@@ -25,6 +24,7 @@ import {get as getProjection} from 'ol/proj.js';
 import WMTS from 'ol/source/WMTS.js';
 import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
 import ImageTile from 'ol/source/ImageTile.js';
+import Feature from 'ol/Feature.js';
 
 import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import {optionsFromCapabilities} from 'ol/source/WMTS.js';
@@ -214,6 +214,14 @@ class OverlayHandler {
             }
             div.innerHTML += `<p style="font-size:${fontSize}">${key}: ${value}</p>`;
         }
+      }
+      console.log(feature.getGeometry().getType());
+      if (feature.getGeometry().getType() == 'Point') {
+        const coords = feature.getGeometry().getCoordinates();
+        div.innerHTML += `<p style="font-size:${fontSize}">Lon: <strong style="font-size:${fontSize}">${coords[0].toFixed(4)}<strong>, Lat: <strong style="font-size:${fontSize}">${coords[1].toFixed(4)}<strong></p>`;
+        div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://maps.google.com?z=12&t=h&q=` + coords[1] + `,` + coords[0] +  `" target="_blank">Google Maps</a>`;
+        div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://earth.google.com/web/@` + coords[1] + `,` + coords[0] +  `" target="_blank">Google Earth</a></p>`;
+        div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://www.openstreetmap.org/#map=11/` + coords[1] + `/` + coords[0] +  `" target="_blank">OSM</a></p>`;
       }
 
       element.appendChild(div);
@@ -589,6 +597,23 @@ const addTocItems = function (params) {
   toc.appendChild(anchor);
 }
 
+const addRecentTrackline = function (layer) {
+  if ( layer ) {
+    // fetch('data/trackline-api-mock.json')
+    fetch('/tracking/track-api.php?trkline')
+    .then((response) => response.json())
+    .then((json) => {
+        console.log(json); // this will show the info it in firebug console
+        const newGeom = new GeoJSON().readGeometry(json);
+        const newFeat = new Feature({geometry: newGeom});
+        layer.getSource().addFeature(newFeat);
+    })
+    .catch((error) => {
+      console.log("Error fetching recent trackline", error);
+    });
+  }
+}
+
 const centerMap = function (layer) {
 
   if ( layer ) {
@@ -673,6 +698,7 @@ loadGeojson({
          'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
          '</svg> </br>',
   styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
   zIndex: 10,
 });
 
