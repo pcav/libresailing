@@ -2,6 +2,8 @@ import Point from 'ol/geom/Point.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
+import { WFS, GML } from 'ol/format';
+import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
 import Circle from 'ol/geom/Circle.js';
 import TileLayer from 'ol/layer/Tile.js';
 import VectorLayer from 'ol/layer/Vector.js';
@@ -28,6 +30,7 @@ import Feature from 'ol/Feature.js';
 
 import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import {optionsFromCapabilities} from 'ol/source/WMTS.js';
+import { load } from 'ol/Image';
 
 const projectionWebMercator = getProjection('EPSG:3857');
 const projectionExtent = projectionWebMercator.getExtent();
@@ -543,6 +546,38 @@ function loadGeojson(params) {
     ;
 }
 
+function loadWFS(params) {
+  
+    console.log("loadWFS",params.url);
+
+    const vectorSource = new VectorSource({
+      format: new WFS(),
+      url: function (extent) {
+        return (
+          params.url+
+          'bbox=' +
+          extent.join(',') +
+          ',urn:ogc:def:crs:EPSG::4326'
+        );
+      },
+      strategy: bboxStrategy,
+      projection:params.projection ? params.projection : 'EPSG:4326',
+    });
+
+    const vector = new VectorLayer({
+        name: params.name,
+        visible: params.visible,
+        source: vectorSource,
+        style: params.styleFunc,
+        zIndex: params.zIndex
+    });
+
+    map.addLayer(vector);
+    addTocItems(params)
+    if (params.callback) params.callback(vector);
+    
+}
+
 const addTocItems = function (params) {
   const anchor = document.createElement('a');
   anchor.classList.add('dropdown-item');
@@ -633,20 +668,9 @@ const centerMap = function (layer) {
   }
 }
 
-loadGeojson({
-  name:'current',
-  url: '/tracking/track-api.php?last=1&type=geojson',
-  //url: '',
-  visible: true,
-  label: 'Current location</br>' +
-         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
-         '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
-  styleFunc: current_loc_style,
-  callback: centerMap,
-  zIndex: 30,
-});
 
 /*
+
 loadGeojson({
   name:'trips',
   url: 'data/rotte.geojson',
@@ -662,7 +686,38 @@ loadGeojson({
          '</svg> as crew</br>',
   styleFunc: redStyle,
   zIndex: 20,
-});*/
+});
+
+
+loadGeojson({
+  name:'tracks',
+  url: 'data/tracks.geojson',
+  visible: true,
+  label: 'Tracks</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
+  zIndex: 10,
+});
+
+*/
+
+
+loadGeojson({
+  name:'current',
+  url: '/tracking/track-api.php?last=1&type=geojson',
+  //url: '',
+  visible: true,
+  label: 'Current location</br>' +
+         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
+         '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
+  styleFunc: current_loc_style,
+  callback: centerMap,
+  zIndex: 30,
+});
 
 loadGeojson({
   name:'highlights',
@@ -689,20 +744,6 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'tracks',
-  url: 'data/tracks.geojson',
-  visible: true,
-  label: 'Tracks</br>' +
-         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
-         '<path d="M 0,5 H 100"' +
-         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
-         '</svg> </br>',
-  styleFunc: darkRedStyle,
-  callback: addRecentTrackline,
-  zIndex: 10,
-});
-
-loadGeojson({
   name:'timezones',
   url: 'data/timezones.geojson',
   visible: false,
@@ -721,6 +762,21 @@ loadGeojson({
   visible: false,
   label: 'Grid',
   styleFunc: gridStyle,
+  zIndex: 10,
+});
+
+loadWFS({
+  name:'tracks_wfs',
+  url: 'http://libresailing.eu:8000/export/wfs/tracks/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=app:tracks&SRSNAME=urn:ogc:def:crs:EPSG::4326&OUTPUTFORMAT=gml/3.2.1&',
+  visible: true,
+  label: 'Tracks</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
+  projection:'EPSG:3857',
   zIndex: 10,
 });
 
