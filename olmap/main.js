@@ -26,6 +26,10 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
 import ImageTile from 'ol/source/ImageTile.js';
 import Feature from 'ol/Feature.js';
 
+import MVT from 'ol/format/MVT.js';
+import VectorTileLayer from 'ol/layer/VectorTile.js';
+import VectorTileSource from 'ol/source/VectorTile.js';
+
 import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import {optionsFromCapabilities} from 'ol/source/WMTS.js';
 
@@ -429,7 +433,7 @@ const map = new Map({
   target: 'map',
   view: new View({
     center: [0, 0],
-    projection: 'EPSG:4326',
+    projection: 'EPSG:3857',
     zoom: 2,
   }),
 });
@@ -541,6 +545,30 @@ function loadGeojson(params) {
       if (params.callback) params.callback();
     });
     ;
+}
+
+function loadMVT(params) {
+
+
+        console.log("loadMVT",params); // this will show the info it in firebug console
+        const vectorSource = new VectorTileSource({
+          format: new MVT(),
+          url: params.url,
+          projection: params.crs ? params.crs : 'EPSG:4623',
+        });
+
+        const vectorLayer = new VectorTileLayer({
+          name: params.name,
+          visible: params.visible,
+          source: vectorSource,
+          style: params.styleFunc,
+          zIndex: params.zIndex
+        });
+        
+        map.addLayer(vectorLayer);
+        addTocItems(params)
+        if (params.callback) params.callback(vectorLayer);
+
 }
 
 const addTocItems = function (params) {
@@ -691,7 +719,7 @@ loadGeojson({
 loadGeojson({
   name:'tracks',
   url: 'data/tracks.geojson',
-  visible: true,
+  visible: false,
   label: 'Tracks</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
          '<path d="M 0,5 H 100"' +
@@ -699,6 +727,21 @@ loadGeojson({
          '</svg> </br>',
   styleFunc: darkRedStyle,
   callback: addRecentTrackline,
+  zIndex: 10,
+});
+
+loadMVT({
+  name:'tracks_MVT',
+  url: 'http://libresailing.eu:8000/export/mvt/current_tracks/{z}/{x}/{y}.pbf',
+  visible: true,
+  label: 'Tracks MVT</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
+  crs: 'EPSG:3857',
   zIndex: 10,
 });
 
