@@ -551,7 +551,7 @@ function loadWFS(params) {
     console.log("loadWFS",params.url);
 
     const vectorSource = new VectorSource({
-      format: new WFS(),
+      format: new GeoJSON(),
       url: function (extent) {
         return (
           params.url+
@@ -767,7 +767,7 @@ loadGeojson({
 
 loadWFS({
   name:'tracks_wfs',
-  url: 'http://libresailing.eu:8000/export/wfs/tracks/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=app:tracks&SRSNAME=urn:ogc:def:crs:EPSG::4326&OUTPUTFORMAT=gml/3.2.1&',
+  url: 'http://libresailing.eu:8000/export/wfs/tracks/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=app:tracks&SRSNAME=urn:ogc:def:crs:EPSG::4326&OUTPUTFORMAT=geojson&',
   visible: true,
   label: 'Tracks</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
