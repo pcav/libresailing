@@ -26,6 +26,10 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
 import ImageTile from 'ol/source/ImageTile.js';
 import Feature from 'ol/Feature.js';
 
+import MVT from 'ol/format/MVT.js';
+import VectorTileLayer from 'ol/layer/VectorTile.js';
+import VectorTileSource from 'ol/source/VectorTile.js';
+
 import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import {optionsFromCapabilities} from 'ol/source/WMTS.js';
 
@@ -429,7 +433,7 @@ const map = new Map({
   target: 'map',
   view: new View({
     center: [0, 0],
-    projection: 'EPSG:4326',
+    projection: 'EPSG:4326', 
     zoom: 2,
   }),
 });
@@ -722,5 +726,25 @@ loadGeojson({
   label: 'Grid',
   styleFunc: gridStyle,
   zIndex: 10,
+});
+
+const trackingLayer = new VectorTileLayer({
+  source: new VectorTileSource({
+    format: new MVT(),
+    url: 'http://libresailing.eu:8000/export/mvt/current_tracks/{z}/{x}/{y}.pbf',
+    projection: 'EPSG:3857',
+  }),
+  zIndex: 25,
+  name: 'live_tracking',
+  visible: true,
+});
+
+console.log("TRACKINGLAYER", trackingLayer);
+
+map.addLayer(trackingLayer);
+addTocItems({
+  name: trackingLayer.get('name'),
+  visible: trackingLayer.get('visible'),
+  label: 'Live Tracking',
 });
 
