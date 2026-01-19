@@ -40,6 +40,9 @@ for (let z = 0; z < 19; ++z) {
   matrixIds[z] = z;
 }
 
+//const host = 'https://libresailing.eu';
+const host = '';
+
 const parser = new WMTSCapabilities();
 
 const Cesium = window.Cesium;
@@ -511,11 +514,11 @@ function loadGeojson(params) {
 
     console.log(params.url);
     fetch(params.url, {
-      mode: 'same-origin'
+      mode: 'cors'
     })
     .then((response) => response.json())
     .then((json) => {
-        console.log(json); // this will show the info it in firebug console
+        console.log("FETCH",json); // this will show the info it in firebug console
         addTocItems(params)
         const vectorSource = new VectorSource({
           features: new GeoJSON().readFeatures(json),
@@ -538,10 +541,12 @@ function loadGeojson(params) {
 
     })
     .catch((error) => {
+      console.log("Error loading geojson", error);
       if (params.callback) params.callback();
     });
     ;
 }
+
 
 const addTocItems = function (params) {
   const anchor = document.createElement('a');
@@ -635,7 +640,7 @@ const centerMap = function (layer) {
 
 loadGeojson({
   name:'current',
-  url: '/tracking/track-api.php?last=1&type=geojson',
+  url: host + '/tracking/track-api.php?last=1&type=geojson',
   //url: '',
   visible: true,
   label: 'Current location</br>' +
@@ -666,7 +671,7 @@ loadGeojson({
 
 loadGeojson({
   name:'highlights',
-  url: 'data/highlights.geojson',
+  url: host + '/tracking/export.php?table=highlights',
   visible: true,
   label: 'Highlights</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
@@ -677,7 +682,7 @@ loadGeojson({
 
 loadGeojson({
   name:'future',
-  url: 'data/future.geojson',
+  url: host + '/tracking/export.php?table=future',
   visible: true,
   label: 'Future</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
@@ -690,7 +695,7 @@ loadGeojson({
 
 loadGeojson({
   name:'tracks',
-  url: 'data/tracks.geojson',
+  url: host + '/tracking/export.php?table=current_tracks',
   visible: true,
   label: 'Tracks</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
