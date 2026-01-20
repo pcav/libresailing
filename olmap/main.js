@@ -40,8 +40,8 @@ for (let z = 0; z < 19; ++z) {
   matrixIds[z] = z;
 }
 
-const host = 'https://libresailing.eu';
-// const host = '';
+// const host = 'https://libresailing.eu';
+const host = '';
 
 const parser = new WMTSCapabilities();
 
@@ -381,7 +381,7 @@ const highlight_style = function (feature) {
         })
     }),
     text: new Text({
-        font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
+        font: mobile ? '32px Arial,sans-serif' : '20px Arial,sans-serif',
         textBaseline: 'middle',
         text: `${text}`,
         offsetX: 16,
@@ -405,7 +405,7 @@ const current_loc_style = function (feature) {
         })
     }),
     text: new Text({
-        font: mobile ? '24px Arial,sans-serif' : '14px Arial,sans-serif',
+        font: mobile ? '32px Arial,sans-serif' : '20px Arial,sans-serif',
         textBaseline: 'middle',
         text: `${text}`,
         offsetX: 16,
