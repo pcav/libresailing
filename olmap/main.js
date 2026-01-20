@@ -40,8 +40,8 @@ for (let z = 0; z < 19; ++z) {
   matrixIds[z] = z;
 }
 
-//const host = 'https://libresailing.eu';
-const host = '';
+const host = 'https://libresailing.eu';
+// const host = '';
 
 const parser = new WMTSCapabilities();
 
@@ -710,7 +710,7 @@ loadGeojson({
 loadGeojson({
   name:'timezones',
   url: 'data/timezones.geojson',
-  visible: false,
+  visible: true,
   label: 'Timezones</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
          '<path d="M 0,5 H 100"' +
