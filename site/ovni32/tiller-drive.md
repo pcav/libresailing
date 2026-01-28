@@ -45,7 +45,8 @@ I followed the procedure as described in the Raymarine ACU-100 manual, with a fe
 
 ### Test at sea
 
-First test (102 NM, 1-18 kn, 1 m swell, mostly broad and beam reach):
+After a few months, and thousands of miles, I'm completely satisfied.
+In detail:
 - sensor works well; less movement of the bar
 - stop at the end work flawlessly (no more *drrrrrr*)
 - extension useful for automated tacking
@@ -54,6 +55,4 @@ First test (102 NM, 1-18 kn, 1 m swell, mostly broad and beam reach):
 - higher strength confirmed
 - general impression of solidity confirmed.
 The mouvement IN is very smooth, that OUT is confirmed discontinuous, but it doesn't seem to be a problem.
-It remains to be seen:
-- response in very rough conditions (>30 kn, >2 m swell)
-- durability over time.
+The only limited downside is some hint of rust appearing on the body of the actuator, in the small steel part.
