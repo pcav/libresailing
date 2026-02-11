@@ -221,7 +221,7 @@ class OverlayHandler {
       console.log(feature.getGeometry().getType());
       if (feature.getGeometry().getType() == 'Point') {
         const coords = feature.getGeometry().getCoordinates();
-        div.innerHTML += `<p style="font-size:${fontSize}">Lon: <strong style="font-size:${fontSize}">${coords[0].toFixed(4)}<strong>, Lat: <strong style="font-size:${fontSize}">${coords[1].toFixed(4)}<strong></p>`;
+        div.innerHTML += `<p style="font-size:${fontSize}">Lon: <strong style="font-size:${fontSize}">${coords[0].toFixed(4)}</strong>, Lat: <strong style="font-size:${fontSize}">${coords[1].toFixed(4)}</strong></p>`;
         div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://maps.google.com?z=12&t=h&q=` + coords[1] + `,` + coords[0] +  `" target="_blank">Google Maps</a>`;
         div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://earth.google.com/web/@` + coords[1] + `,` + coords[0] +  `" target="_blank">Google Earth</a></p>`;
         div.innerHTML += `<p style="font-size:${fontSize}"><a href="https://www.openstreetmap.org/#map=11/` + coords[1] + `/` + coords[0] +  `" target="_blank">OSM</a></p>`;
