@@ -40,6 +40,7 @@ for (let z = 0; z < 19; ++z) {
   matrixIds[z] = z;
 }
 
+// to run locally
 // const host = 'https://libresailing.eu';
 const host = '';
 
