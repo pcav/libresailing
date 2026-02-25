@@ -670,8 +670,8 @@ loadGeojson({
 });*/
 
 loadGeojson({
-  name:'highlights',
-  url: host + '/tracking/export.php?table=highlights',
+  name:'Highlights',
+  url: host + '/tracking/export.php?table=highlights_v',
   visible: true,
   label: 'Highlights</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
