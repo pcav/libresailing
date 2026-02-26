@@ -397,7 +397,7 @@ const highlight_style = function (feature) {
 
 const current_loc_style = function (feature) {
   console.log(feature.getProperties());
-  const text = feature.get('time');
+  const text = feature.get('time (UTC)');
   return new olStyleStyle({
     image: new CircleStyle({
         radius: 10,
