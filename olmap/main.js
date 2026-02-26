@@ -437,12 +437,7 @@ const map = new Map({
     zoom: 2,
   }),
 });
-// display the gif while loading the map
-const splash = document.getElementById("splash");
 
-map.once('rendercomplete', () => {
-    splash.style.display = 'none';
-});
 const ol3d = new OLCesium({
     map: map,
     time() {
