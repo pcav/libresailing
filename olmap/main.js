@@ -639,12 +639,25 @@ const centerMap = function (layer) {
   }
 }
 
+/*
 loadGeojson({
-  name:'current',
+  name:'Current position',
   url: host + '/tracking/track-api.php?last=1&type=geojson',
-  //url: '',
   visible: true,
-  label: 'Current location</br>' +
+  label: 'Current position</br>' +
+         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
+         '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
+  styleFunc: current_loc_style,
+  callback: centerMap,
+  zIndex: 30,
+});
+*/
+
+loadGeojson({
+  name:'Current position',
+  url: host + '/tracking/export.php?table=current_v',
+  visible: true,
+  label: 'Current position</br>' +
          '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
          '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#fc5603" /></svg>',
   styleFunc: current_loc_style,
@@ -682,8 +695,8 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'future',
-  url: host + '/tracking/export.php?table=future',
+  name:'Future',
+  url: host + '/tracking/export.php?table=future_v',
   visible: true,
   label: 'Future</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
@@ -695,8 +708,8 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'tracks',
-  url: host + '/tracking/export.php?table=current_tracks',
+  name:'Done',
+  url: host + '/tracking/export.php?table=tracks_v',
   visible: true,
   label: 'Tracks</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
@@ -709,7 +722,7 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'timezones',
+  name:'Timezones',
   url: 'data/timezones.geojson',
   visible: true,
   label: 'Timezones</br>' +
@@ -722,7 +735,7 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'grid',
+  name:'Grid',
   url: 'data/latlongrid.geojson',
   visible: false,
   label: 'Grid',
