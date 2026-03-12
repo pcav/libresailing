@@ -25,6 +25,7 @@ A list of my experiences with producers, technicians, and service providers for 
 - [Marine cookers](https://www.techimpex.tv/): excellent after sale service, some problems in the product
 - [TiberMast](https://www.tibermast.com/) rigging
 - [Bluetti](https://www.bluettipower.com): good aftersale service, it broke soon
+- [Lalizas](https://www.lalizas.com/): repeated failures, limited support
 
 ## Bad
 
