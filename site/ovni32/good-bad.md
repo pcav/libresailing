@@ -10,6 +10,7 @@ A list of my experiences with producers, technicians, and service providers for 
 - [Victron Energy](https://www.victronenergy.com/)
 - [Antal](https://www.antal.it/): low friction rings, clutches
 - [HongBa actuators](https://www.hbactuator.com/)
+- [Pacific Yacht Rigging](https://pacificyachtrigging.com/)
 
 ## Mixed
 
@@ -17,9 +18,7 @@ A list of my experiences with producers, technicians, and service providers for 
 - [Raymarine](https://www.raymarine.com): generally good products, but 
   * the [ST4000 tiller actuator](https://www.raymarine.com/en-us/our-products/boat-autopilots/autopilot-drive-units/cockpit-tiller-drive) failed often (5 in 5 years)
   * their ticketing system is often very slow and ineffective in replying
-- [Yanmar](https://www.yanmar.com/): excellent engines, but their dealer network is not up to its standard
-  * [SV Servizi srl](https://svservizi.eu/)
-  * [Delta Mike Marine Supply](https://www.dmmarinesupply.com/)
+- [Yanmar](https://www.yanmar.com/): excellent engines, but their dealer network is not up to its standard, see *Bad*
   * [Sopromar](https://www.sopromar.com/)
   * central offices unavailable to account for mistakes by the dealers, no control over dealers
 - [Marine cookers](https://www.techimpex.tv/): excellent after sale service, some problems in the product
@@ -34,3 +33,5 @@ A list of my experiences with producers, technicians, and service providers for 
 - Interior painting by Italian carpenters: very expensive, not durable
 - [MV Spools](https://www.mvspools.com/) fishing equipment
 - [Nuku Hiva Maintenance](https://www.facebook.com/p/Nuku-Hiva-Maintenance-100093586062752/) (not to be confused with Yacht Services Nuku-Hiva, which is OK to my knowledge)
+- [Delta Mike Marine Supply](https://www.dmmarinesupply.com/)
+- [SV Servizi srl](https://svservizi.eu/)
