@@ -58,8 +58,15 @@ In detail:
 The mouvement IN is very smooth, that OUT is confirmed discontinuous, but it doesn't seem to be a problem.
 The only limited downside is some hint of rust appearing on the body of the actuator, in the small steel part.
 
-### Update
+### Updates
 
+#### 2026-04-01
 After 6 months of navigation the actuator suddenly stopped working, because of a failed switch at end of extension (it was only going out, no in movement). This is, according to HB, very difficult to repair, so I applied for warranty, and I bought a spare one at the same time.
 The underlying problem is that the actuator is not done for marine use, so it requires water and rust proofing. Pity for such a good piece of hardware. According to the seller this is a rare problem, so maybe I've just been unlucky. Time will tell.
 While examining the problem, I found the angled SD20 connector internal soldering rather fragile, especially on the very weak resistors necessary for position sensor. I suggest using straight connectors wherever possible.
+
+#### 2026-05-25
+Received a replacement under warranty. Problems:
+* the plug is angled, not straight as requested (I found the angled plug tends to twist the cable and break the resistance soldering)
+* the replacement is not the original item, but the bare tiller (about 70 € less value); I had to take the shaft and ending from the previous broken actuator
+* I had to cover for the shipping.
