@@ -55,7 +55,7 @@ In detail:
 - power consumption seems smaller (further measurements needed)
 - higher strength confirmed
 - general impression of solidity confirmed.
-The mouvement IN is very smooth, that OUT is confirmed discontinuous, but it doesn't seem to be a problem.
+The mouvement IN is very smooth, that OUT is confirmed discontinuous, but it doesn't seem to be a problem. **UPDATE** adjusting up the rudder dumping (gain) from the Raymarine pilote control fixes the issue.
 The only limited downside is some hint of rust appearing on the body of the actuator, in the small steel part.
 
 ### Updates
