@@ -724,7 +724,7 @@ loadGeojson({
 loadGeojson({
   name:'Timezones',
   url: 'data/timezones.geojson',
-  visible: true,
+  visible: false,
   label: 'Timezones</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
          '<path d="M 0,5 H 100"' +
