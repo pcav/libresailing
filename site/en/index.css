@@ -29,7 +29,10 @@ div {
 }
 
 div img {
-  width: 100%;
+  max-width: 36rem;
+  display: block;
+  margin: auto;
+  clip-path: circle(50%);
 }
 
 blockquote p {
