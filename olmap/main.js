@@ -459,7 +459,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
 
     decode_layers.landsat = new TileLayer({
           opacity: 1,
-          name: 'landsat',
+          name: 'Satellite',
           basemap: true,
           visible: false,
           source: new WMTS(options),
@@ -468,7 +468,7 @@ fetch('https://gibs-c.earthdata.nasa.gov/wmts/epsg3857/all/?SERVICE=WMTS&REQUEST
 
     decode_layers.osm = new TileLayer({
         source: new OSM(),
-        name: 'osm',
+        name: 'Base map',
         basemap: true,
         visible: true,
         zIndex: 1,
@@ -665,6 +665,20 @@ loadGeojson({
   zIndex: 30,
 });
 
+loadGeojson({
+  name:'My navigations',
+  url: host + '/tracking/export.php?table=tracks_v',
+  visible: true,
+  label: 'My navigations</br>' +
+         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
+         '<path d="M 0,5 H 100"' +
+         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
+         '</svg> </br>',
+  styleFunc: darkRedStyle,
+  callback: addRecentTrackline,
+  zIndex: 10,
+});
+
 /*
 loadGeojson({
   name:'trips',
@@ -695,10 +709,10 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'Future',
+  name:'Plan for the future',
   url: host + '/tracking/export.php?table=future_v',
   visible: true,
-  label: 'Future</br>' +
+  label: 'Plan for the future</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
          '<path d="M 0,5 H 100"' +
          'style="fill:#009917;stroke:#009917;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
@@ -708,24 +722,10 @@ loadGeojson({
 });
 
 loadGeojson({
-  name:'Done',
-  url: host + '/tracking/export.php?table=tracks_v',
-  visible: true,
-  label: 'Tracks</br>' +
-         '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
-         '<path d="M 0,5 H 100"' +
-         'style="fill:#a02e30;stroke:#a02e30;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
-         '</svg> </br>',
-  styleFunc: darkRedStyle,
-  callback: addRecentTrackline,
-  zIndex: 10,
-});
-
-loadGeojson({
-  name:'Timezones',
+  name:'Time zones',
   url: 'data/timezones.geojson',
   visible: false,
-  label: 'Timezones</br>' +
+  label: 'Time zones</br>' +
          '<svg height="10" width="100" xmlns="http://www.w3.org/2000/svg">' +
          '<path d="M 0,5 H 100"' +
          'style="fill:#0099ff;stroke:#0099ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0" />' +
@@ -738,7 +738,7 @@ loadGeojson({
   name:'Grid',
   url: 'data/latlongrid.geojson',
   visible: false,
-  label: 'Grid',
+  label: 'Lat/Lon',
   styleFunc: gridStyle,
   zIndex: 10,
 });
