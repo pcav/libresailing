@@ -484,7 +484,7 @@ const photo_style = function (feature) {
   const text = feature.get('MEDIA_CAPTION') ?? ''; // + ' ' + feature.get('arrival');
   return new olStyleStyle({
     image: new CircleStyle({
-        radius: 5,
+        radius: mobile ? 15 : 5,
         fill: new olStyleFill({
             color: "#004799"
         })
@@ -508,7 +508,7 @@ const highlight_style = function (feature) {
   const text = feature.get('name'); // + ' ' + feature.get('arrival');
   return new olStyleStyle({
     image: new CircleStyle({
-        radius: 10,
+        radius: mobile ? 20 : 10,
         fill: new olStyleFill({
             color: "#009917"
         })
@@ -532,7 +532,7 @@ const current_loc_style = function (feature) {
   const text = feature.get('time (UTC)');
   return new olStyleStyle({
     image: new CircleStyle({
-        radius: 10,
+        radius: mobile ? 20 : 10,
         fill: new olStyleFill({
             color: "#fc5603"
         })
