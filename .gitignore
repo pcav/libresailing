@@ -29,5 +29,10 @@ site/.well-known/
 site/tracking/track_config.php
 site/.htaccess
 site/map
+site/TdM
+conf/synctdm_conf.py
 
 lav/*
+
+*/__pycache__
+
