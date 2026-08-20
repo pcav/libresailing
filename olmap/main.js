@@ -41,8 +41,8 @@ for (let z = 0; z < 19; ++z) {
 }
 
 // to run locally
-// const host = 'https://libresailing.eu';
-const host = '';
+const host = 'https://libresailing.eu';
+// const host = '';
 
 const parser = new WMTSCapabilities();
 
@@ -114,6 +114,102 @@ const styles = {
     }),
   }),
 };
+
+function createMediaFrame(url, title = '') {
+    const frame = document.createElement('div');
+
+    frame.className =
+        'position-fixed top-0 start-0 w-100 h-100 ' +
+        'bg-dark bg-opacity-75 d-flex ' +
+        'align-items-center justify-content-center';
+
+    frame.style.zIndex = '99999';
+
+    // Contenitore
+    const content = document.createElement('div');
+    content.className = 'position-relative bg-white rounded p-2';
+    content.style.maxWidth = '95vw';
+    content.style.maxHeight = '95vh';
+
+    // Bottone chiusura
+    const closeButton = document.createElement('button');
+
+    closeButton.type = 'button';
+    closeButton.className =
+        'position-absolute top-0 end-0 m-2 p-0 border-0 bg-transparent';
+
+    closeButton.innerHTML = '<i class="bi bi-x-square-fill text-white fs-2"></i>';
+
+    closeButton.setAttribute('aria-label', 'Chiudi');
+
+    closeButton.addEventListener('click', () => {
+        frame.remove();
+    });
+
+    content.appendChild(closeButton);
+
+    // Determina il tipo di file
+    const extension = url.split('?')[0].split('.').pop().toLowerCase();
+
+    let media;
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
+
+        media = document.createElement('img');
+        media.src = url;
+        media.alt = title;
+
+        media.style.maxWidth = '85vw';
+        media.style.maxHeight = '80vh';
+        media.style.objectFit = 'contain';
+
+    } else if (extension === 'mp4') {
+
+        media = document.createElement('video');
+        media.src = url;
+        media.controls = true;
+
+        media.style.maxWidth = '85vw';
+        media.style.maxHeight = '80vh';
+
+    } else {
+        console.warn('Formato non supportato:', extension);
+        return null;
+    }
+
+    content.appendChild(media);
+
+    // Titolo
+    if (title) {
+        const caption = document.createElement('div');
+        caption.className = 'text-center mt-2';
+        caption.textContent = title;
+        content.appendChild(caption);
+    }
+
+    frame.appendChild(content);
+
+    // Chiudi cliccando sullo sfondo
+    frame.addEventListener('click', (event) => {
+        if (event.target === frame) {
+            frame.remove();
+        }
+    });
+
+    // Chiudi con ESC
+    const escapeHandler = (event) => {
+        if (event.key === 'Escape') {
+            frame.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+
+    document.addEventListener('keydown', escapeHandler);
+
+    //document.body.appendChild(frame);
+    console.log("mediacontainer")
+    document.getElementById('mediacontainer').appendChild(frame);
+}
 
 class OverlayHandler {
   constructor(ol2d, ol3d, scene) {
@@ -204,19 +300,29 @@ class OverlayHandler {
       const title = layer.get('name')
       const fontSize = mobile ? '4vw' : '1vw';
       //$(element).prop('title', title);
-
+      this.media = undefined
       div.innerHTML += `<h3 style="font-size:${fontSize}">${title}</h3>`;
       const props = feature.getProperties()
       for (const key in props) {
         if (key == 'geometry') continue;
         let value 
-        if (props[key]) {
-            if (key == 'FOTO') {
-              value = `<img class="ico rounded" src="${props[key]}" />`;
+        if (!key.startsWith('_') && props[key]) {
+            if (key == 'MEDIA' ) {
+
+              if (props[key].endsWith('jpg') || props[key].endsWith('jpeg') || props[key].endsWith('png')) {
+                value = `<img class="ico rounded" src="https://libresailing.eu${props[key]}" />`;
+                this.media = `https://libresailing.eu${props[key]}`
+              } else if (props[key].endsWith('mp4')) {
+                value = `<video controls muted width="600" class="ico rounded" ><source src="${props[key]}" type="video/mp4">Il browser non supporta la riproduzione video.</video>`;
+              }
+              div.innerHTML += `<p>${value}</p>`;
+            } else if (key == 'MEDIA_CAPTION' ) {
+              div.innerHTML += `<strong style="font-size:${fontSize}">${props[key]}<strong>`;
             } else {
               value = `<strong style="font-size:${fontSize}">${props[key]}<strong>`;
+              div.innerHTML += `<p style="font-size:${fontSize}">${key}: ${value}</p>`;
             }
-            div.innerHTML += `<p style="font-size:${fontSize}">${key}: ${value}</p>`;
+            
         }
       }
       console.log(feature.getGeometry().getType());
@@ -245,7 +351,9 @@ class OverlayHandler {
 
   onCloseClick() {
     console.log("onCloseClick")
-    this.resetFeature()
+    this.resetFeature();
+    console.log("THISMEDIA", this.media);
+    if (this.media) createMediaFrame(this.media);
   }
 
   setupOverlay() {
@@ -370,6 +478,30 @@ const selectionStyle = new olStyleStyle({
     })
   })
 });
+
+const photo_style = function (feature) {
+  console.log(feature.getProperties());
+  const text = feature.get('MEDIA_CAPTION') ?? ''; // + ' ' + feature.get('arrival');
+  return new olStyleStyle({
+    image: new CircleStyle({
+        radius: 5,
+        fill: new olStyleFill({
+            color: "#004799"
+        })
+    }),
+    text: new Text({
+        font: mobile ? '18px Arial,sans-serif' : '10px Arial,sans-serif',
+        textBaseline: 'middle',
+        text: `${text}`,
+        offsetX: 16,
+        textAlign: 'left',
+        //rotation: -0.785398164, //45
+        fill: new Fill({
+          color: "#004799",
+        }),
+    })
+  })
+}
 
 const highlight_style = function (feature) {
   console.log(feature.getProperties());
@@ -521,8 +653,23 @@ function loadGeojson(params) {
     .then((json) => {
         console.log("FETCH",json); // this will show the info it in firebug console
         addTocItems(params)
+
+        const feats = new GeoJSON().readFeatures(json)
+
+        if (params.zIndex) {
+          feats.forEach(feature => {
+            const geometry = feature.getGeometry();
+            
+            if (geometry && geometry.getType() === 'Point') {
+              const [x, y] = geometry.getCoordinates();
+              // Rewrite the geometry with the added Z dimension
+              geometry.setCoordinates([x, y, params.zIndex]); 
+            }
+          });
+        }
+
         const vectorSource = new VectorSource({
-          features: new GeoJSON().readFeatures(json),
+          features: feats,
           // url: '/sailing_trips.geojson',
           // format: new GeoJSON(),
           projection:'EPSG:4326'
@@ -706,6 +853,18 @@ loadGeojson({
          '<circle cx="10" cy="10" r="10" stroke-width="0" fill="#009917" /></svg>',
   styleFunc: highlight_style,
   zIndex: 21,
+});
+
+loadGeojson({
+  name:'Photo',
+  url: host + '/tracking/export.php?table=photo',
+  //url: 'data/photo.geojson',
+  visible: true,
+  label: 'Photos</br>' +
+         '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">' +
+         '<circle cx="6" cy="6" r="6" stroke-width="0" fill="#004799" /></svg>',
+  styleFunc: photo_style,
+  zIndex: 100,
 });
 
 loadGeojson({
