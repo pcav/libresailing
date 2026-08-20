@@ -54,8 +54,8 @@
         right: 8px;
       }
       .ico {
-        max-width:200px;
-        max-height:400px;
+        max-width:300px;
+        max-height:300px;
       }
       .popup-content p{
         margin-bottom: 5px;
@@ -97,6 +97,14 @@
         border-bottom-right-radius: 6.6px !important;
       }
 
+      #mediacontainer {
+          position: fixed;
+          z-index: 100003;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+
       @media only screen and (max-width: 500px) {
 
         input[type=checkbox] {
@@ -119,7 +127,7 @@
       }
 
     </style>
-    <script type="module" crossorigin src="/map/assets/index-BhwlXzJu.js"></script>
+    <script type="module" crossorigin src="/map/assets/index-wkpOxTxw.js"></script>
     <link rel="stylesheet" crossorigin href="/map/assets/index-BvvTTXun.css">
   </head>
   <body>
@@ -128,6 +136,7 @@
         <a href="#" id="popup-closer" class="ol-popup-closer"></a>
         <div id="popup-content"></div>
     </div>
+    <div id="mediacontainer" class="container mt-3"></div>
     <div id="map" class="map"></div>
     <div class="">
     
